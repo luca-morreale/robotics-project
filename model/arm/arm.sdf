@@ -2,10 +2,10 @@
 <sdf version="1.6">
 <model name="kobra_arm">
     
-    <link name="vertical_arm">
+    <link name="arm">
         <!-- Offset the arm by half the height of the wheel +
         + the height of the chassis -->
-        <pose>0.1625 0 0.675 0 0 0</pose>
+        <pose>0 0 0 0 0 0</pose>
         <inertial>
             <mass>1</mass>
             <!-- matrix of inertias of a solid cylinider with mass m,
@@ -42,7 +42,7 @@
     </link>
     
     <link name="camera_support">
-        <pose>0.1875 0 1.0975 0 -1.5707 0</pose>
+        <pose>0.025 0 0.4225 0 -1.5707 0</pose>
         <inertial>
             <mass>1</mass>
             <!-- matrix of inertias of a solid cylinider with mass m,
@@ -79,7 +79,7 @@
     </link>
     
     <link name="camera_support_sphere">
-        <pose>0.211 0 1.0975 0 0 0</pose>
+        <pose>0.0485 0 0.4225 0 0 0</pose>
         <inertial></inertial>
         <collision name="collision">
             <geometry>
@@ -98,7 +98,7 @@
     </link>
     
     <link name="camera_support_2">
-        <pose>0.222 0 1.0925 0 2.0943 0</pose>
+        <pose>0.0595 0 0.4225 0 2.0943 0</pose>
         <inertial>
             <mass>1</mass>
             <!-- matrix of inertias of a solid cylinider with mass m,
@@ -139,7 +139,7 @@
     <joint type="fixed" name="camera_support_joint">
         <pose>0 0 0 0 0 0</pose>
         <child>camera_support</child>
-        <parent>vertical_arm</parent>
+        <parent>arm</parent>
     </joint>
     <joint type="fixed" name="camera_support_sphere_joint">
         <pose>0 0 0 0 0 0</pose>

@@ -158,7 +158,19 @@
         </axis>
     </joint>
     
+    <!--            Vertical Arm            -->
     
+    <include>
+        <uri>model://kobra_arm</uri>
+        <pose>0.1625 0 0.675 0 0 0</pose>
+    </include>
+    
+    
+    <joint type="fixed" name="vertical_arm_joint">
+        <pose>0 0 0 0 0 0</pose>
+        <child>kobra_arm::arm</child>
+        <parent>chassis</parent>
+    </joint>
     
 
     
@@ -182,17 +194,7 @@
     
     <!--                 Test external file                       -->
     
-    <include>
-        <uri>model://kobra_arm</uri>
-        <pose>0.1625 0 0.675 0 0 0</pose>
-    </include>
-    
-    
-    <joint type="fixed" name="vertical_arm_joint">
-        <pose>0 0 0 0 0 0</pose>
-        <child>kobra_arm</child>
-        <parent>chassis</parent>
-    </joint>
+
     
 </model>
 </sdf>
