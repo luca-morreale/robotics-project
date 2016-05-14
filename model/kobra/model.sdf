@@ -41,11 +41,6 @@
         <child>kobra_hokuyo::link</child>
         <parent>kobra_chassis::chassis</parent>
     </joint>
-      
-    <include>
-        <uri>model://camera</uri>
-        <pose>0.522 0 1.0925 0 0.52359 0</pose>
-    </include>
     
     
 
