@@ -6,23 +6,23 @@
         <!-- Offset the arm by half the height of the wheel +
         + the height of the chassis -->
         <pose>0 0 0 0 0 0</pose>
-        <inertial>
-            <mass>1</mass>
-            <!-- matrix of inertias of a solid cylinider with mass m,
-                radius r, height h is:
-                |m(3*r^2+h^2)/12    0      0    |
-                |   0   m(3*r^2+h^2)/12    0    |
-                |   0       0   m*r^2/2 | 
-            -->
-            <inertia>
-                <ixx>0.083125</ixx>
-                <ixy>0.0</ixy>
-                <ixz>0.0</ixz>
-                <iyy>0.083125</iyy>
-                <iyz>0.0</iyz>
-                <izz>0.78125</izz>
-            </inertia>
-        </inertial>
+      <inertial>
+        <mass>0.5</mass>
+	<!-- matrix of inertias of a solid cylinider with mass m,
+	     radius r, height h is:
+		|m(3*r^2+h^2)/12	0	   0    |
+		|	0	m(3*r^2+h^2)/12	   0    |
+		|	0		0	m*r^2/2 | 
+	-->
+        <inertia>
+          <ixx>0.033828</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.033828</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.000156</izz>
+        </inertia>
+      </inertial>
         <collision name="collision">
             <geometry>
             <cylinder>
@@ -43,23 +43,23 @@
     
     <link name="camera_support">
         <pose>0.025 0 0.4225 0 -1.5707 0</pose>
-        <inertial>
-            <mass>1</mass>
-            <!-- matrix of inertias of a solid cylinider with mass m,
-                radius r, height h is:
-                |m(3*r^2+h^2)/12    0      0    |
-                |   0   m(3*r^2+h^2)/12    0    |
-                |   0       0   m*r^2/2 | 
-            -->
-            <inertia>
-            <ixx>0.083125</ixx>
-            <ixy>0.0</ixy>
-            <ixz>0.0</ixz>
-            <iyy>0.083125</iyy>
-            <iyz>0.0</iyz>
-            <izz>0.78125</izz>
-            </inertia>
-        </inertial>
+            <inertial>
+        <mass>.1</mass>
+	<!-- matrix of inertias of a solid cylinider with mass m,
+	     radius r, height h is:
+		|m(3*r^2+h^2)/12	0	   0    |
+		|	0	m(3*r^2+h^2)/12	   0    |
+		|	0		0	m*r^2/2 | 
+	-->
+        <inertia>
+          <ixx>0.0083125</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.0083125</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.078125</izz>
+        </inertia>
+      </inertial>
         <collision name="collision">
             <geometry>
             <cylinder>
@@ -80,7 +80,22 @@
     
     <link name="camera_support_sphere">
         <pose>0.0485 0 0.4225 0 0 0</pose>
-        <inertial></inertial>
+        	<inertial>
+        <mass>.1</mass>
+	<!-- matrix of inertias of a solid sphere with mass m and radius r:
+		|(2*m*r^2)/5		0		0    |
+		|	0	(2*m*r^2)/5		0    |
+		|	0		0	(2*m*r^2)/5| 
+	-->
+        <inertia>
+          <ixx>0.00000625</ixx>
+          <ixy>0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.00000625</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.00000625</izz>
+        </inertia>
+      </inertial>
         <collision name="collision">
             <geometry>
             <sphere>
@@ -99,23 +114,17 @@
     
     <link name="camera_support_2">
         <pose>0.0575 0 0.4175 0 2.0943 0</pose>
-        <inertial>
-            <mass>1</mass>
-            <!-- matrix of inertias of a solid cylinider with mass m,
-                radius r, height h is:
-                |m(3*r^2+h^2)/12    0      0    |
-                |   0   m(3*r^2+h^2)/12    0    |
-                |   0       0   m*r^2/2 | 
-            -->
-            <inertia>
-            <ixx>0.083125</ixx>
-            <ixy>0.0</ixy>
-            <ixz>0.0</ixz>
-            <iyy>0.083125</iyy>
-            <iyz>0.0</iyz>
-            <izz>0.78125</izz>
-            </inertia>
-        </inertial>
+            <inertial>
+        <mass>.1</mass>
+        <inertia>
+          <ixx>0.0083125</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.0083125</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.078125</izz>
+        </inertia>
+      </inertial>
         <collision name="collision">
             <geometry>
             <cylinder>

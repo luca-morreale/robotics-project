@@ -5,23 +5,23 @@
     <link name="chassis">
         <!-- Offset the base by slightly more then half the height of the wheel -->
         <pose>0 0 0.15 0 0 0</pose>
-        <inertial>
-            <mass>14.0</mass>
-            <!-- matrix of inertias of a solid cuboid with mass m, width w, 
-                height h, depth d is:
-                |m(h^2+d^2)/12      0       0    |
-                |   0   m(w^2+d^2)/12       0    |
-                |   0       0   m(w^2+h^2)/12| 
-            -->
-            <inertia>
-                <ixx>1.0</ixx>
-                <ixy>0.0</ixy>
-                <ixz>0.0</ixz>
-                <iyy>0,3236625</iyy>
-                <iyz>0.0</iyz>
-                <izz>1.0</izz>
-            </inertia>
-        </inertial>
+	<inertial>
+        <mass>9.5</mass>
+	<!-- matrix of inertias of a solid cuboid with mass m, width w, 
+	     height h, depth d is:
+		|m(h^2+d^2)/12		0		0    |
+		|	0	m(w^2+d^2)/12		0    |
+		|	0		0	m(w^2+h^2)/12| 
+	-->
+        <inertia>
+          <ixx>0.21179</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.3</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.478978</izz>
+        </inertia>
+      </inertial>
         <collision name="collision">
             <geometry>
             <box>
@@ -45,6 +45,23 @@
         roll 90°=1.5707 rad      
         -->
         <pose>0.09 -0.2825 0.0725 1.5707 0 0</pose>
+	<inertial>
+        <mass>1</mass>
+	<!-- matrix of inertias of a solid cylinider with mass m,
+	     radius r, height h is:
+		|m(3*r^2+h^2)/12	0	   0    |
+		|	0	m(3*r^2+h^2)/12	   0    |
+		|	0		0	m*r^2/2 | 
+	-->
+        <inertia>
+          <ixx>0.00148</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.00148</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.002628</izz>
+        </inertia>
+      </inertial>
         <collision name="collision">
             <geometry>
             <cylinder>
@@ -65,6 +82,17 @@
     
     <link name="left_front_wheel">
         <pose>0.09 0.2825 0.0725 1.5707 0 0</pose>
+	<inertial>
+        <mass>1</mass>
+        <inertia>
+          <ixx>0.00148</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.00148</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.002628</izz>
+        </inertia>
+      </inertial>
         <collision name="collision">
             <geometry>
             <cylinder>
@@ -85,6 +113,17 @@
     
     <link name="right_rear_wheel">
         <pose>-0.09 -0.2825 0.0725 1.5707 0 0</pose>
+	<inertial>
+        <mass>1</mass>
+        <inertia>
+          <ixx>0.00148</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.00148</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.002628</izz>
+        </inertia>
+      </inertial>
         <collision name="collision">
             <geometry>
             <cylinder>
@@ -105,6 +144,17 @@
     
     <link name="left_rear_wheel">
         <pose>-0.09 0.2825 0.0725 1.5707 0 0</pose>
+	<inertial>
+        <mass>1</mass>
+        <inertia>
+          <ixx>0.00148</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>0.00148</iyy>
+          <iyz>0.0</iyz>
+          <izz>0.002628</izz>
+        </inertia>
+      </inertial>
         <collision name="collision">
             <geometry>
             <cylinder>
