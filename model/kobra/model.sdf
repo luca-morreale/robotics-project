@@ -31,13 +31,14 @@
     <!--             Sensors                -->
     
     <include>
-        <uri>model://hokuyo</uri>
+        <uri>model://kobra_hokuyo</uri>
         <pose>0.29 0 0.10 0 0 0</pose>
     </include>
     
+    
       
     <joint name="hokuyo_joint" type="fixed">
-        <child>hokuyo::link</child>
+        <child>kobra_hokuyo::link</child>
         <parent>kobra_chassis::chassis</parent>
     </joint>
       
