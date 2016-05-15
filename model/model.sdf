@@ -5,23 +5,23 @@
     <link name="chassis">
         <!-- Offset the base by slightly more then half the height of the wheel -->
         <pose>0 0 0.15 0 0 0</pose>
-        <inertial>
-            <mass>14.0</mass>
-            <!-- matrix of inertias of a solid cuboid with mass m, width w, 
-                height h, depth d is:
-                |m(h^2+d^2)/12      0       0    |
-                |   0   m(w^2+d^2)/12       0    |
-                |   0       0   m(w^2+h^2)/12| 
-            -->
-            <inertia>
-                <ixx>1.0</ixx>
-                <ixy>0.0</ixy>
-                <ixz>0.0</ixz>
-                <iyy>0,3236625</iyy>
-                <iyz>0.0</iyz>
-                <izz>1.0</izz>
-            </inertia>
-        </inertial>
+        <inertial> 
+            <mass>9.5</mass> 
+            <!-- matrix of inertias of a solid cuboid with mass m, width w,  
+                height h, depth d is: 
+                | m(h^2+d^2)/12      0            0        | 
+                |  0            m(w^2+d^2)/12     0        | 
+                |  0                  0       m(w^2+h^2)/12|  
+            --> 
+            <inertia> 
+                <ixx>0.21179</ixx> 
+                <ixy>0.0</ixy> 
+                <ixz>0.0</ixz> 
+                <iyy>0.3</iyy> 
+                <iyz>0.0</iyz> 
+                <izz>0.478978</izz> 
+            </inertia> 
+        </inertial> 
         <collision name="collision">
             <geometry>
             <box>
@@ -44,23 +44,23 @@
         <!-- Offset the arm by half the height of the wheel +
         + the height of the chassis -->
         <pose>0.1625 0 0.675 0 0 0</pose>
-        <inertial>
-            <mass>1</mass>
-            <!-- matrix of inertias of a solid cylinider with mass m,
-                radius r, height h is:
-                |m(3*r^2+h^2)/12    0      0    |
-                |   0   m(3*r^2+h^2)/12    0    |
-                |   0       0   m*r^2/2 | 
-            -->
-            <inertia>
-                <ixx>0.083125</ixx>
-                <ixy>0.0</ixy>
-                <ixz>0.0</ixz>
-                <iyy>0.083125</iyy>
-                <iyz>0.0</iyz>
-                <izz>0.78125</izz>
-            </inertia>
-        </inertial>
+        <inertial> 
+            <mass>0.5</mass> 
+            <!-- matrix of inertias of a solid cylinider with mass m, 
+                radius r, height h is: 
+                |m(3*r^2+h^2)/12      0               0     | 
+                |  0              m(3*r^2+h^2)/12     0     | 
+                |  0                 0              m*r^2/2 |  
+            --> 
+            <inertia> 
+            <ixx>0.033828</ixx> 
+            <ixy>0.0</ixy> 
+            <ixz>0.0</ixz> 
+            <iyy>0.033828</iyy> 
+            <iyz>0.0</iyz> 
+            <izz>0.000156</izz> 
+            </inertia> 
+        </inertial> 
         <collision name="collision">
             <geometry>
             <cylinder>
@@ -75,85 +75,94 @@
                 <radius>.025</radius>
                 <length>.9</length>
             </cylinder>
+            </geometry>
+        </visual>
+    </link>
+    
+    <link name="arm_extension">
+        <pose>0.1875 0 1.0975 0 -1.5707 0</pose>
+        <inertial> 
+            <mass>.1</mass> 
+            <!-- matrix of inertias of a solid cylinider with mass m, 
+                radius r, height h is: 
+                | m(3*r^2+h^2)/12  0                0    | 
+                |  0           m(3*r^2+h^2)/12      0    | 
+                |  0            0                m*r^2/2 |  
+            --> 
+            <inertia> 
+            <ixx>0.0083125</ixx> 
+            <ixy>0.0</ixy> 
+            <ixz>0.0</ixz> 
+            <iyy>0.0083125</iyy> 
+            <iyz>0.0</iyz> 
+            <izz>0.078125</izz> 
+            </inertia> 
+        </inertial> 
+        <collision name="collision">
+            <geometry>
+            <cylinder>
+                <radius>.01</radius>
+                <length>.03</length>
+            </cylinder>
+            </geometry>
+        </collision>
+        <visual name="visual">
+            <geometry>
+            <cylinder>
+                <radius>.01</radius>
+                <length>.03</length>
+            </cylinder>
+            </geometry>
+        </visual>
+    </link>
+    
+    <link name="camera_junction_sphere">
+        <pose>0.211 0 1.0975 0 0 0</pose>
+        <inertial> 
+            <mass>.1</mass> 
+            <!-- matrix of inertias of a solid sphere with mass m and radius r: 
+                |(2*m*r^2)/5         0            0    | 
+                |  0             (2*m*r^2)/5      0    | 
+                |  0                  0     (2*m*r^2)/5|  
+            --> 
+            <inertia> 
+                <ixx>0.00000625</ixx> 
+                <ixy>0</ixy> 
+                <ixz>0.0</ixz> 
+                <iyy>0.00000625</iyy> 
+                <iyz>0.0</iyz> 
+                <izz>0.00000625</izz> 
+            </inertia> 
+        </inertial> 
+        <collision name="collision">
+            <geometry>
+            <sphere>
+                <radius>.0125</radius>
+            </sphere>
+            </geometry>
+        </collision>
+        <visual name="visual">
+            <geometry>
+            <sphere>
+                <radius>.0125</radius>
+            </sphere>
             </geometry>
         </visual>
     </link>
     
     <link name="camera_support">
-        <pose>0.1875 0 1.0975 0 -1.5707 0</pose>
-        <inertial>
-            <mass>1</mass>
-            <!-- matrix of inertias of a solid cylinider with mass m,
-                radius r, height h is:
-                |m(3*r^2+h^2)/12    0      0    |
-                |   0   m(3*r^2+h^2)/12    0    |
-                |   0       0   m*r^2/2 | 
-            -->
-            <inertia>
-            <ixx>0.083125</ixx>
-            <ixy>0.0</ixy>
-            <ixz>0.0</ixz>
-            <iyy>0.083125</iyy>
-            <iyz>0.0</iyz>
-            <izz>0.78125</izz>
-            </inertia>
-        </inertial>
-        <collision name="collision">
-            <geometry>
-            <cylinder>
-                <radius>.01</radius>
-                <length>.03</length>
-            </cylinder>
-            </geometry>
-        </collision>
-        <visual name="visual">
-            <geometry>
-            <cylinder>
-                <radius>.01</radius>
-                <length>.03</length>
-            </cylinder>
-            </geometry>
-        </visual>
-    </link>
-    
-    <link name="camera_support_sphere">
-        <pose>0.211 0 1.0975 0 0 0</pose>
-        <inertial></inertial>
-        <collision name="collision">
-            <geometry>
-            <sphere>
-                <radius>.0125</radius>
-            </sphere>
-            </geometry>
-        </collision>
-        <visual name="visual">
-            <geometry>
-            <sphere>
-                <radius>.0125</radius>
-            </sphere>
-            </geometry>
-        </visual>
-    </link>
-    
-    <link name="camera_support_2">
-        <pose>0.222 0 1.0925 0 2.0943 0</pose>
-        <inertial>
-            <mass>1</mass>
-            <!-- matrix of inertias of a solid cylinider with mass m,
-                radius r, height h is:
-                |m(3*r^2+h^2)/12    0      0    |
-                |   0   m(3*r^2+h^2)/12    0    |
-                |   0       0   m*r^2/2 | 
-            -->
-            <inertia>
-            <ixx>0.083125</ixx>
-            <ixy>0.0</ixy>
-            <ixz>0.0</ixz>
-            <iyy>0.083125</iyy>
-            <iyz>0.0</iyz>
-            <izz>0.78125</izz>
-            </inertia>
-        </inertial>
+        <pose>0.222 0 1.0915 0 2.0943 0</pose>
+        <inertial> 
+            <mass>.1</mass> 
+            <inertia> 
+                <ixx>0.0083125</ixx> 
+                <ixy>0.0</ixy> 
+                <ixz>0.0</ixz> 
+                <iyy>0.0083125</iyy> 
+                <iyz>0.0</iyz> 
+                <izz>0.078125</izz> 
+            </inertia> 
+        </inertial> 
         <collision name="collision">
             <geometry>
             <cylinder>
@@ -177,6 +186,23 @@
         roll 90°=1.5707 rad      
         -->
         <pose>0.09 -0.2825 0.0725 1.5707 0 0</pose>
+        <inertial> 
+            <mass>1</mass> 
+            <!-- matrix of inertias of a solid cylinider with mass m, 
+                radius r, height h is: 
+                |m(3*r^2+h^2)/12  0                  0    | 
+                |  0             m(3*r^2+h^2)/12     0    | 
+                |  0                0             m*r^2/2 |  
+            --> 
+            <inertia> 
+                <ixx>0.00148</ixx> 
+                <ixy>0.0</ixy> 
+                <ixz>0.0</ixz> 
+                <iyy>0.00148</iyy> 
+                <iyz>0.0</iyz> 
+                <izz>0.002628</izz> 
+            </inertia> 
+        </inertial> 
         <collision name="collision">
             <geometry>
             <cylinder>
@@ -197,6 +223,17 @@
     
     <link name="left_front_wheel">
         <pose>0.09 0.2825 0.0725 1.5707 0 0</pose>
+        <inertial> 
+            <mass>1</mass> 
+            <inertia> 
+                <ixx>0.00148</ixx> 
+                <ixy>0.0</ixy> 
+                <ixz>0.0</ixz> 
+                <iyy>0.00148</iyy> 
+                <iyz>0.0</iyz> 
+                <izz>0.002628</izz> 
+            </inertia> 
+        </inertial> 
         <collision name="collision">
             <geometry>
             <cylinder>
@@ -217,6 +254,17 @@
     
     <link name="right_rear_wheel">
         <pose>-0.09 -0.2825 0.0725 1.5707 0 0</pose>
+        <inertial> 
+            <mass>1</mass> 
+            <inertia> 
+                <ixx>0.00148</ixx> 
+                <ixy>0.0</ixy> 
+                <ixz>0.0</ixz> 
+                <iyy>0.00148</iyy> 
+                <iyz>0.0</iyz> 
+                <izz>0.002628</izz> 
+            </inertia> 
+        </inertial> 
         <collision name="collision">
             <geometry>
             <cylinder>
@@ -237,6 +285,17 @@
     
     <link name="left_rear_wheel">
         <pose>-0.09 0.2825 0.0725 1.5707 0 0</pose>
+        <inertial> 
+            <mass>1</mass> 
+            <inertia> 
+                <ixx>0.00148</ixx> 
+                <ixy>0.0</ixy> 
+                <ixz>0.0</ixz> 
+                <iyy>0.00148</iyy> 
+                <iyz>0.0</iyz> 
+                <izz>0.002628</izz> 
+            </inertia> 
+        </inertial>
         <collision name="collision">
             <geometry>
             <cylinder>
@@ -294,20 +353,20 @@
         <child>vertical_arm</child>
         <parent>chassis</parent>
     </joint>
-    <joint type="fixed" name="camera_support_joint">
+    <joint type="fixed" name="arm_extension_joint">
         <pose>0 0 0 0 0 0</pose>
-        <child>camera_support</child>
+        <child>arm_extension</child>
         <parent>vertical_arm</parent>
     </joint>
-    <joint type="fixed" name="camera_support_sphere_joint">
+    <joint type="fixed" name="junction_sphere_joint">
         <pose>0 0 0 0 0 0</pose>
-        <child>camera_support_sphere</child>
-        <parent>camera_support</parent>
+        <child>camera_junction_sphere</child>
+        <parent>arm_extension</parent>
     </joint>
-    <joint type="revolute2" name="camera_support_2_joint">
+    <joint type="revolute2" name="camera_support_joint">
         <pose>0 0 0 0 0 0</pose>
-        <child>camera_support_2</child>
-        <parent>camera_support_sphere</parent>
+        <child>camera_support</child>
+        <parent>camera_junction_sphere</parent>
         <axis>
             <xyz>1 0 0</xyz>
         </axis>
@@ -318,20 +377,101 @@
     
     <!--             Sensors                -->
     
-    <include>
-        <uri>model://hokuyo</uri>
-        <pose>0.29 0 0.10 0 0 0</pose>
-    </include>
-      
+     
     <joint name="hokuyo_joint" type="fixed">
-        <child>hokuyo::link</child>
+        <child>kobra_hokuyo::link</child>
         <parent>chassis</parent>
-    </joint> 
-      
-    <include>
-        <uri>model://camera</uri>
-        <pose>0.522 0 1.0925 0 0.52359 0</pose>
-    </include>
+    </joint>
+    
+    <joint name="camera_joint" type="fixed">
+        <child>kobra_camera::link</child>
+        <parent>camera_support</parent>
+    </joint>
+    
+    
+    
+    <model name="kobra_hokuyo">
+        <pose>0.29 0 0.10 0 0 0</pose>
+        <link name="link">
+        <inertial>
+            <mass>0.1</mass>
+        </inertial>
+        <visual name="visual">
+            <geometry>
+            <mesh>
+                <uri>model://hokuyo/meshes/hokuyo.dae</uri>
+            </mesh>
+            </geometry>
+        </visual>
+        <sensor name="laser" type="ray">
+            <pose>0.01 0 0.03 0 -0 0</pose>
+            <ray>
+            <scan>
+                <horizontal>
+                <samples>640</samples>
+                <resolution>1</resolution>
+                <min_angle>-1.5708</min_angle>
+                <max_angle>1.5708</max_angle>
+                </horizontal>
+            </scan>
+            <range>
+                <min>0.08</min>
+                <max>10</max>
+                <resolution>0.01</resolution>
+            </range>
+            </ray>
+
+            <plugin name="laser" filename="libRayPlugin.so" />
+            <always_on>1</always_on>
+            <update_rate>30</update_rate>
+            <visualize>true</visualize>
+        </sensor>
+        </link>
+    </model>
+
+    <model name="kobra_camera">
+        <pose>0.229 0 1.090 0 0.52359 0</pose>
+        <link name="link">
+            <inertial>
+            <mass>0.1</mass>
+            <inertia>
+                <ixx>0.000166667</ixx>
+                <iyy>0.000166667</iyy>
+                <izz>0.000166667</izz>
+            </inertia>
+            </inertial>
+            <collision name="collision">
+            <geometry>
+                <box>
+                <size>0.01 0.03 0.01</size>
+                </box>
+            </geometry>
+            </collision>
+            <visual name="visual">
+            <geometry>
+                <box>
+                <size>0.01 0.03 0.01</size>
+                </box>
+            </geometry>
+            </visual>
+            <sensor name="camera" type="camera">
+            <camera>
+                <horizontal_fov>1.047</horizontal_fov>
+                <image>
+                <width>320</width>
+                <height>240</height>
+                </image>
+                <clip>
+                <near>0.1</near>
+                <far>100</far>
+                </clip>
+            </camera>
+            <always_on>1</always_on>
+            <update_rate>30</update_rate>
+            <visualize>true</visualize>
+            </sensor>
+        </link>
+    </model>
     
 </model>
 </sdf>
