@@ -358,21 +358,21 @@
         <child>arm_extension</child>
         <parent>vertical_arm</parent>
     </joint>
-    <joint type="fixed" name="junction_sphere_joint">
+    <joint type="revolute" name="junction_sphere_joint">
         <pose>0 0 0 0 0 0</pose>
         <child>camera_junction_sphere</child>
         <parent>arm_extension</parent>
+        <axis>
+            <xyz>0 1 0</xyz>
+        </axis>
     </joint>
-    <joint type="revolute2" name="camera_support_joint">
+    <joint type="revolute" name="camera_support_joint">
         <pose>0 0 0 0 0 0</pose>
         <child>camera_support</child>
         <parent>camera_junction_sphere</parent>
         <axis>
             <xyz>1 0 0</xyz>
         </axis>
-        <axis2>
-            <xyz>0 1 0</xyz>
-        </axis2>
     </joint>
     
     <!--             Sensors                -->
@@ -387,8 +387,6 @@
         <child>kobra_camera::link</child>
         <parent>camera_support</parent>
     </joint>
-    
-    
     
     <model name="kobra_hokuyo">
         <pose>0.29 0 0.10 0 0 0</pose>
@@ -472,6 +470,23 @@
             </sensor>
         </link>
     </model>
+    
+    <!--            Plugins             -->
+    
+    <plugin name="skid_steer_drive_controller" filename="libSkidSteerDrivePlugin.so">
+        <updateRate>100.0</updateRate>
+        <robotNamespace>/</robotNamespace>
+        <leftFrontJoint>left_front_wheel_joint</leftFrontJoint>
+        <rightFrontJoint>right_front_wheel_joint</rightFrontJoint>
+        <leftRearJoint>left_rear_wheel_joint</leftRearJoint>
+        <rightRearJoint>right_rear_wheel_joint</rightRearJoint>
+        <wheelSeparation>0.035</wheelSeparation>
+        <wheelDiameter>0.145</wheelDiameter>
+        <robotBaseFrame>chassis</robotBaseFrame>
+        <torque>20</torque>
+        <topicName>kobra_velocity</topicName>
+        <broadcastTF>false</broadcastTF>
+    </plugin>
     
 </model>
 </sdf>
