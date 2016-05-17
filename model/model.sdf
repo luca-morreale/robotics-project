@@ -484,7 +484,9 @@
         <wheelDiameter>0.145</wheelDiameter>
         <robotBaseFrame>chassis</robotBaseFrame>
         <torque>20</torque>
-        <topicName>kobra_velocity</topicName>
+        <topicName>cmd_vel</topicName>
+	<odometryTopic>odom</odometryTopic>
+	<odometryFrame>odom</odometryFrame>
         <broadcastTF>false</broadcastTF>
     </plugin>
     
