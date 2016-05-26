@@ -497,5 +497,21 @@
         <broadcastTF>false</broadcastTF>
     </plugin>
     
+    <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>kobra_camera</cameraName>
+        <imageTopicName>kobra/image</imageTopicName>
+        <cameraInfoTopicName>kobra/camera_info</cameraInfoTopicName>
+        <!-- not known -->
+        <hackBaseline>0.1</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+    </plugin>
+
+
 </model>
 </sdf>
