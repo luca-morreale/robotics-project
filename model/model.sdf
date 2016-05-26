@@ -199,12 +199,12 @@
                 |	0		0	m*r^2/2 | 
             -->
             <inertia>
-                <ixx>0.00148</ixx>
+                <ixx>0,001482813</ixx>
                 <ixy>0.0</ixy>
                 <ixz>0.0</ixz>
-                <iyy>0.00148</iyy>
+                <iyy>0,001482813</iyy>
                 <iyz>0.0</iyz>
-                <izz>0.002628</izz>
+                <izz>0,002628125</izz>
             </inertia>
         </inertial>
         <collision name="collision">
@@ -229,12 +229,12 @@
         <inertial>
             <mass>1</mass>
             <inertia>
-                <ixx>0.00148</ixx>
+                <ixx>0,001482813</ixx>
                 <ixy>0.0</ixy>
                 <ixz>0.0</ixz>
-                <iyy>0.00148</iyy>
+                <iyy>0,001482813</iyy>
                 <iyz>0.0</iyz>
-                <izz>0.002628</izz>
+                <izz>0,002628125</izz>
             </inertia>
         </inertial>
         <collision name="collision">
@@ -259,12 +259,12 @@
         <inertial>
             <mass>1</mass>
             <inertia>
-                <ixx>0.00148</ixx>
+                <ixx>0,001482813</ixx>
                 <ixy>0.0</ixy>
                 <ixz>0.0</ixz>
-                <iyy>0.00148</iyy>
+                <iyy>0,001482813</iyy>
                 <iyz>0.0</iyz>
-                <izz>0.002628</izz>
+                <izz>0,002628125</izz>
             </inertia>
         </inertial>
         <collision name="collision">
@@ -289,12 +289,12 @@
         <inertial>
             <mass>1</mass>
             <inertia>
-                <ixx>0.00148</ixx>
+                <ixx>0,001482813</ixx>
                 <ixy>0.0</ixy>
                 <ixz>0.0</ixz>
-                <iyy>0.00148</iyy>
+                <iyy>0,001482813</iyy>
                 <iyz>0.0</iyz>
-                <izz>0.002628</izz>
+                <izz>0,002628125</izz>
             </inertia>
         </inertial>
         <collision name="collision">
