@@ -6,8 +6,6 @@
 
 #include <gazebo_plugins/gazebo_ros_skid_steer_drive.h>
 
-#include <gazebo/plugins/CameraPlugin.hh>
-
 #include <gazebo/math/gzmath.hh>
 #include <sdf/sdf.hh>
 
@@ -20,6 +18,8 @@
 #include <boost/bind.hpp>
 #include <boost/thread/mutex.hpp>
 
+#include "kobra_plugins/ptz_msg.h"
+
 /*
 <panJoint> camera_support_joint orizzontale
 <tiltJoint> camera_junction_sphere_joint verticale
@@ -31,6 +31,13 @@
 namespace gazebo
 {
     #define N_JOINTS 2
+    #define DEFAULT_PAN_VEL 0.1
+    #define DEFAULT_TILT_VEL 0.1
+    #define PAN "pan"
+    #define TILT "tilt"
+
+    typedef std::map<std::string, std::string> MapString;
+    typedef MapString::const_iterator MapStrConstIterator;
 
     class PantTiltCameraPlugin : public ModelPlugin {
     public:
@@ -39,32 +46,37 @@ namespace gazebo
 
         void Load(physics::ModelPtr _model, sdf::ElementPtr _sdf);
 
+    protected:
         void update();
-        void pantiltCallback(const geometry_msgs::Twist::ConstPtr& cmd_msg);
+        virtual void pantiltCallback(const kobra_plugins::ptz_msg::ConstPtr &msg);
+        virtual void setZoom(float z) { } //advertise to camera setting and publish info! http://wiki.ros.org/camera_calibration
 
-        virtual void setZoom(float z) { }
+        void startTilting(const ros::TimerEvent& /* evt */, float tilt_degree);
 
     private:
+        static const MapString joints_name_tag;
+
         physics::ModelPtr parent;
         event::ConnectionPtr update_connection;
         ros::NodeHandle *rosnode;
         ros::Subscriber sub;
 
-        static const std::string joints_name_tag[N_JOINTS];
-
-        std::string joints_name[N_JOINTS];
+        MapString joints_name;
         std::string topic_name;
         std::string camera_name;
-        rendering::CameraPtr camera;
 
         std::map<std::string, physics::JointPtr> joints;
+        float pan_velocity = DEFAULT_PAN_VEL;
+        float tilt_velocity = DEFAULT_TILT_VEL;
 
-    
+
         bool checkTags(sdf::ElementPtr _sdf);
         bool checkJointsTag(sdf::ElementPtr _sdf);
         bool checkTopicTags(sdf::ElementPtr _sdf);
         
         void extractJoints(sdf::ElementPtr _sdf);
+        void extractNames(sdf::ElementPtr _sdf);
+        void extractVelocities(sdf::ElementPtr _sdf);
 
     };
 
