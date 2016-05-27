@@ -1,4 +1,4 @@
-#include "steering_control.h"
+#include "kobra_plugins/steering_control.h"
 
 using namespace gazebo;
 

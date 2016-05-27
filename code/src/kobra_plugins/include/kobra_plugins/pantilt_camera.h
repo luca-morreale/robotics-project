@@ -2,7 +2,7 @@
 #define PANTILT_CAMERA_H
 
 #include <algorithm>
-#include <assert.h>
+#include <map>
 
 #include <gazebo_plugins/gazebo_ros_skid_steer_drive.h>
 
@@ -30,6 +30,8 @@
 
 namespace gazebo
 {
+    #define N_JOINTS 2
+
     class PantTiltCameraPlugin : public ModelPlugin {
     public:
         PantTiltCameraPlugin() : ModelPlugin() { }
@@ -48,18 +50,21 @@ namespace gazebo
         ros::NodeHandle *rosnode;
         ros::Subscriber sub;
 
-        std::string pan_joint_name;
-        std::string tilt_joint_name;
+        static const std::string joints_name_tag[N_JOINTS];
+
+        std::string joints_name[N_JOINTS];
         std::string topic_name;
         std::string camera_name;
         rendering::CameraPtr camera;
 
-        physics::JointPtr pan_joint;
-        physics::JointPtr tilt_joint;
-
+        std::map<std::string, physics::JointPtr> joints;
 
     
         bool checkTags(sdf::ElementPtr _sdf);
+        bool checkJointsTag(sdf::ElementPtr _sdf);
+        bool checkTopicTags(sdf::ElementPtr _sdf);
+        
+        void extractJoints(sdf::ElementPtr _sdf);
 
     };
 

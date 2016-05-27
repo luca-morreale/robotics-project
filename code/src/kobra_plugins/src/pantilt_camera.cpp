@@ -1,11 +1,14 @@
-#include "pantilt_camera.h"
+#include "kobra_plugins/pantilt_camera.h"
 
 using namespace gazebo;
 
+const std::string joints_name_tag[2] = {"PanJoint", "TiltJoint"};
 
 /*
 <panJoint> camera_support_joint orizzontale
+<panVelocity>
 <tiltJoint> camera_junction_sphere_joint verticale
+<tiltVelocity>
 <topicName>/kobra/ptz
 <cameraName>
 */
@@ -24,15 +27,12 @@ void PantTiltCameraPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
         return;
     }
 
-    pan_joint_name = _sdf->GetElement("panJoint")->Get<std::string>();
-    pan_joint = this->parent->GetJoint(pan_joint_name);
-
-    tilt_joint_name = _sdf->GetElement("tiltJoint")->Get<std::string>();
-    tilt_joint = this->parent->GetJoint(tilt_joint_name);
+    extractNames(_sdf);
+    extractJoints(_sdf);
 
     topic_name = _sdf->GetElement("topicName")->Get<std::string>();
     
-    camera_name = _sdf->GetElement("cameraName")->Get<std::string>();
+    camera_name = _sdf->GetElement("cameraName")->Get<st_sdfd::string>();
     //camera = camera??
 
     rosnode = new ros::NodeHandle();
@@ -47,20 +47,36 @@ void PantTiltCameraPlugin::update()
 void PantTiltCameraPlugin::pantiltCallback(const ptz_msgsConstPtr& msg)
 {
     // TODO
-    float = pan
+    float pan = msg.pan;
+    float tilt = msg.tilt;
+    float zoom = msg.zoom;
+
+    //pan_joint.setVelocity();
+    //tilt_joint.setVelocity();
 
 }
 
 bool PantTiltCameraPlugin::checkTags(sdf::ElementPtr _sdf)
 {
-    if(!_sdf->HasElement("panJoint")) {
-        ROS_FATAL_STREAM("PantTiltCameraPlugin: <panJoint> missing!");
-        return false;
+    
+
+    return checkJointsTag(_sdf) && checkTopicTags(_sdf);
+    
+}
+
+bool PantTiltCameraPlugin::checkJointsTag(sdf::ElementPtr _sdf)
+{
+    for(int i=0; i<N_JOINTS; i++) {
+        if(!_sdf->HasElement(joints_name_tag[i])) {
+            ROS_FATAL_STREAM("PantTiltCameraPlugin: <"+ joints_name_tag[i] +"> missing!");
+            return false;
+        }
     }
-    if(!_sdf->HasElement("tiltJoint")) {
-        ROS_FATAL_STREAM("PantTiltCameraPlugin: <tiltJoint> missing!");
-        return false;
-    }
+    return true;
+}
+
+bool PantTiltCameraPlugin::checkTopicTags(sdf::ElementPtr _sdf) 
+{
     if(!_sdf->HasElement("topicName")) {
         ROS_FATAL_STREAM("PantTiltCameraPlugin: <topicName> missing!");
         return false;
@@ -71,6 +87,18 @@ bool PantTiltCameraPlugin::checkTags(sdf::ElementPtr _sdf)
     }
 
     return true;
+}
+
+void extractNames(sdf::ElementPtr _sdf)
+{
+    
+}
+
+void PantTiltCameraPlugin::extractJoints(sdf::ElementPtr _sdf) 
+{
+    for(int i=0; i<N_JOINTS; i++) {
+        joints[joints_name[i]] = this->parent->GetJoint(joints_name[i]);
+    }
 }
 
 
