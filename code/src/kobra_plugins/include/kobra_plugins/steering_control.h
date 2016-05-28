@@ -50,7 +50,7 @@ namespace gazebo
         static const std::string command_tag;
         static const std::string wheel_separation_tag;
         static const std::string wheel_diameter_tag;
-        static const std:string update_rate_tag;
+        static const std::string update_rate_tag;
 
         std::string joints_names[N_JOINTS];
         physics::JointPtr joints[N_JOINTS];

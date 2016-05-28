@@ -3,6 +3,7 @@
 using namespace gazebo;
 
 /*Tag names used in model.sdf*/
+const MapString joints_name_tag = {RIGHT_FRONT, 0}, {LEFT_FRONT, 1}, {RIGHT_REAR, 2}, {LEFT_REAR, 3}};
 const std::string joints_tag_names[N_JOINTS] = {"LeftFrontJoint", "RightFrontJoint", "LeftRearJoint", "RightRearJoint"};
 const std::string odometry_topic_tag = "OdometryTopic";
 const std::string odometry_frame_tag = "OdometryFrame";
@@ -10,13 +11,6 @@ const std::string robot_base_frame_tag = "robotBaseFrame";
 const std::string command_tag = "CmdTopic";
 const std::string wheel_separation_tag = "wheelSeparation";
 const std::string update_rate_tag = "updateRate";
-
-enum {
-    RIGHT_FRONT=0,
-    LEFT_FRONT=1,
-    RIGHT_REAR=2,
-    LEFT_REAR=3,
-  };
 
 void SteeringControlPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 {
@@ -32,9 +26,9 @@ void SteeringControlPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     this->wheel_diameter=0.145;
     this->wheel_separation=0.495;
     this->robot_base_frame = "base_footprint";
-    this->update_rate_ = 100.0;
+    this->update_rate = 100.0;
 
-        //Initilize last update to current time
+    //Initilize last update to current time
     this->last_update_time = this->world->GetSimTime();
 
     //Extract informations from the sdf file
@@ -56,28 +50,27 @@ void SteeringControlPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     odom_pub = rosnode->advertise<nav_msgs::Odometry>(this->odometry_topic, 1);
 
     //Init velocities
-    this->wheel_speed_[RIGHT_FRONT] = 0;
-    this->wheel_speed_[LEFT_FRONT] = 0;
-    this->wheel_speed_[RIGHT_REAR] = 0;
-    this->wheel_speed_[LEFT_REAR] = 0;
+    this->wheel_speed[RIGHT_FRONT] = 0;
+    this->wheel_speed[LEFT_FRONT] = 0;
+    this->wheel_speed[RIGHT_REAR] = 0;
+    this->wheel_speed[LEFT_REAR] = 0;
     this->linear=0;
     this->angular=0;
     
 }
 
 void SteeringControlPlugin::update() 
+{
     common::Time current_time = this->world->GetSimTime();
-    double seconds_since_last_update =
-      (current_time - last_update_time).Double();
+    double seconds_since_last_update = (current_time - last_update_time).Double();
+
     if (seconds_since_last_update > update_period) {
-
-      publishOdometry(seconds_since_last_update);
-
-      //Update the time of the last update
-      //last_update_time_+= common::Time(update_period);
-      last_update_time = this->world->GetSimTime();
+    	publishOdometry(seconds_since_last_update);
+    	//Update the time of the last update
+    	//last_update_time_+= common::Time(update_period);
+    	last_update_time = this->world->GetSimTime();
     }
-  }
+}
 
 void SteeringControlPlugin::cmdCallback(const geometry_msgs::Twist::ConstPtr& cmd_msg)
 {
@@ -89,7 +82,7 @@ void SteeringControlPlugin::cmdCallback(const geometry_msgs::Twist::ConstPtr& cm
 bool SteeringControlPlugin::extractJoints(sdf::ElementPtr _sdf)
 {
     for(int i = 0; i < N_JOINTS; i++){
-        if(!_sdf->HasElement(joints_tag_names[i])) {
+    	if(!_sdf->HasElement(joints_tag_names[i])) {
             ROS_FATAL_STREAM(ROS_NODE_NAME " missing "+ this->joints_names[i]);
             return false;
         }
@@ -106,22 +99,19 @@ void SteeringControlPlugin::extractRobotInfo(sdf::ElementPtr _sdf)
     if (!_sdf->HasElement(wheel_separation_tag)) {
     	ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %s.", this->wheel_separation_tag, this->wheel_separation);
     } else {
-      this->wheel_separation=
-        _sdf->GetElement(wheel_separation_tag)->Get<double>();
+      this->wheel_separation= _sdf->GetElement(wheel_separation_tag)->Get<double>();
     }
 
     if (!_sdf->HasElement(wheel_diameter_tag)) {
     	ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %s.", this->wheel_diameter_tag, this->wheel_diameter);
     } else {
-      this->wheel_diameter=
-        _sdf->GetElement(wheel_diameter_tag)->Get<double>();
+      this->wheel_diameter= _sdf->GetElement(wheel_diameter_tag)->Get<double>();
     }
 
     if (!_sdf->HasElement(robot_base_frame_tag)) {
         ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to \"%s\"", this->robot_base_frame_tag, this->robot_base_frame);
     } else {
-      this->robot_base_frame_ = 
-       _sdf->GetElement(robot_base_frame_tag)->Get<std::string>();
+      this->robot_base_frame = _sdf->GetElement(robot_base_frame_tag)->Get<std::string>();
     }
 
     if (!_sdf->HasElement(update_rate_tag)) {
