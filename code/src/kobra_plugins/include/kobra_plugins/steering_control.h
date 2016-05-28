@@ -1,3 +1,4 @@
+
 #ifndef STEERING_CONTROL_H
 #define STEERING_CONTROL_H
 
@@ -40,11 +41,16 @@ namespace gazebo
         ros::NodeHandle *rosnode;
         ros::Subscriber cmd_sub;
         ros::Publisher odom_pub;
+        nav_msgs::Odometry odom_msg;
 
         static const std::string joints_tag_names[N_JOINTS];
         static const std::string odometry_topic_tag;
         static const std::string odometry_frame_tag;
+        static const std::string robot_base_frame_tag;
         static const std::string command_tag;
+        static const std::string wheel_separation_tag;
+        static const std::string wheel_diameter_tag;
+        static const std:string update_rate_tag;
 
         std::string joints_names[N_JOINTS];
         physics::JointPtr joints[N_JOINTS];
@@ -52,13 +58,25 @@ namespace gazebo
         std::string odometry_topic;
         std::string odometry_frame;
         std::string command_topic;
+        std::string robot_base_frame;
 
+        geometry_msgs::Vector3 linear;
+        geometry_msgs::Vector3 angular;
+        double wheel_speed[4];
+        double wheel_separation;
+        double wheel_diameter;
+        double update_rate;
+        double update_period;
 
-        bool checkJoints(sdf::ElementPtr _sdf);
+        common::Time last_update_time;
+
+        bool extractJoints(sdf::ElementPtr _sdf);
+        void extractGeneralInfo(sdf::Element _sdf);
         void extractOdomInfo(sdf::ElementPtr _sdf);
         void extractCmdTopic(sdf::ElementPtr _sdf);
-
-
+        void publishOdometry();
+        void getWheelVelocities();
+        void getLinearAndAngularVelocities();
     };
 
 GZ_REGISTER_MODEL_PLUGIN(SteeringControlPlugin)
