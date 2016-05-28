@@ -1,31 +1,20 @@
 #ifndef PANTILT_CAMERA_H
 #define PANTILT_CAMERA_H
 
-#include <algorithm>
+
 #include <map>
 
-#include <gazebo_plugins/gazebo_ros_skid_steer_drive.h>
-
-#include <gazebo/math/gzmath.hh>
-#include <sdf/sdf.hh>
+#include <gazebo/common/common.hh>
+#include <gazebo/physics/physics.hh>
 
 #include <ros/ros.h>
-#include <tf/transform_broadcaster.h>
-#include <tf/transform_listener.h>
-#include <geometry_msgs/Twist.h>
-#include <nav_msgs/GetMap.h>
-#include <nav_msgs/Odometry.h>
+#include <ros/callback_queue.h>
+#include <ros/advertise_options.h>
+
+#include <boost/thread.hpp>
 #include <boost/bind.hpp>
-#include <boost/thread/mutex.hpp>
 
 #include "kobra_plugins/ptz_msg.h"
-
-/*
-<panJoint> camera_support_joint orizzontale
-<tiltJoint> camera_junction_sphere_joint verticale
-<topicName>/kobra/ptz
-<cameraName>
-*/
 
 
 namespace gazebo
