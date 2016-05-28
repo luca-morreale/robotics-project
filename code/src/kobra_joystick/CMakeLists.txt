@@ -113,9 +113,14 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 # include_directories(include)
-include_directories(
+link_directories(${GAZEBO_LIBRARY_DIRS})
+
+include_directories(include
+  ${Boost_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
+  ${GAZEBO_INCLUDE_DIRS}
 )
+
 
 ## Declare a C++ library
 # add_library(kobra_joystick
@@ -128,16 +133,14 @@ include_directories(
 # add_dependencies(kobra_joystick ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-# add_executable(kobra_joystick_node src/kobra_joystick_node.cpp)
+add_executable(kobra_joystick src/kobra_joystick.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(kobra_joystick_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(kobra_joystick ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(kobra_joystick_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(kobra_joystick ${catkin_LIBRARIES} )
 
 #############
 ## Install ##
