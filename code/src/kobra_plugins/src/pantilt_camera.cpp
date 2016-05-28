@@ -33,12 +33,8 @@ void PantTiltCameraPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     extractVelocities(_sdf);
 
     rosnode = new ros::NodeHandle();
-    rosnode->subscribe(this->topic_name, 10, &PantTiltCameraPlugin::pantiltCallback, this);
-}
 
-void PantTiltCameraPlugin::update() 
-{
-    // TODO
+    rossub = rosnode->subscribe(topic_name, 10, &PantTiltCameraPlugin::pantiltCallback, this);
 }
 
 void PantTiltCameraPlugin::pantiltCallback(const kobra_plugins::ptz_msg::ConstPtr &msg)
@@ -50,24 +46,18 @@ void PantTiltCameraPlugin::pantiltCallback(const kobra_plugins::ptz_msg::ConstPt
     float pan_time = pan_degree / pan_velocity;
     if(pan_time > 0){
         joints[PAN]->SetVelocity(0, pan_velocity);
+        ros::Duration(pan_time).sleep();
     }
     
-    ros::Timer timer = rosnode->createTimer(ros::Duration(pan_time), 
-                                boost::bind(&PantTiltCameraPlugin::startTilting, this, _1, tilt_degree), true);
-}
-
-void PantTiltCameraPlugin::startTilting(const ros::TimerEvent& /* evt */, float tilt_degree)
-{
     joints[PAN]->SetVelocity(0, 0);
 
     float tilt_time = tilt_degree / tilt_velocity;
     if(tilt_time > 0){
         joints[TILT]->SetVelocity(0, tilt_velocity);
+        ros::Duration(tilt_time).sleep();
     }
-    auto endMovements = [this](const ros::TimerEvent& /* evt */) 
-                                    { joints[TILT]->SetVelocity(0, 0); };
 
-    ros::Timer timer = rosnode->createTimer(ros::Duration(tilt_time), endMovements, true);
+    joints[TILT]->SetVelocity(0, 0); 
 }
 
 bool PantTiltCameraPlugin::checkTags(sdf::ElementPtr _sdf)
@@ -130,7 +120,6 @@ void PantTiltCameraPlugin::extractJoints(sdf::ElementPtr _sdf)
         joints[it->first] = this->parent->GetJoint(joints_name[it->first]);
     }
 }
-
 
 PantTiltCameraPlugin::~PantTiltCameraPlugin()
 {
