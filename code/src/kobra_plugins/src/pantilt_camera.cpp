@@ -118,6 +118,7 @@ void PantTiltCameraPlugin::extractJoints(sdf::ElementPtr _sdf)
         //it->second tag 
         joints_name[it->first] = _sdf->GetElement(it->second)->Get<std::string>();
         joints[it->first] = this->parent->GetJoint(joints_name[it->first]);
+        joints[it->first]->SetVelocity(0, 0); 
     }
 }
 
