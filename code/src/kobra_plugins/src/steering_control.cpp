@@ -158,25 +158,25 @@ void SteeringControlPlugin::extractRobotInfo(sdf::ElementPtr _sdf)
     if (!_sdf->HasElement(wheel_separation_tag)) {
     	ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %s.", this->wheel_separation_tag, this->wheel_separation);
     } else {
-      this->wheel_separation= _sdf->GetElement(wheel_separation_tag)->Get<double>();
+        this->wheel_separation= _sdf->GetElement(wheel_separation_tag)->Get<double>();
     }
 
     if (!_sdf->HasElement(wheel_diameter_tag)) {
     	ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %s.", this->wheel_diameter_tag, this->wheel_diameter);
     } else {
-      this->wheel_diameter= _sdf->GetElement(wheel_diameter_tag)->Get<double>();
+        this->wheel_diameter= _sdf->GetElement(wheel_diameter_tag)->Get<double>();
     }
 
     if (!_sdf->HasElement(robot_base_frame_tag)) {
         ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to \"%s\"", this->robot_base_frame_tag, this->robot_base_frame);
     } else {
-      this->robot_base_frame = _sdf->GetElement(robot_base_frame_tag)->Get<std::string>();
+        this->robot_base_frame = _sdf->GetElement(robot_base_frame_tag)->Get<std::string>();
     }
 
     if (!_sdf->HasElement(update_rate_tag)) {
-      ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %f", this->update_rate_tag, this->update_rate);
+        ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %f", this->update_rate_tag, this->update_rate);
     } else {
-      this->update_rate = _sdf->GetElement(update_rate_tag)->Get<double>();
+        this->update_rate = _sdf->GetElement(update_rate_tag)->Get<double>();
     }
 }
 
@@ -190,7 +190,7 @@ void SteeringControlPlugin::extractOdomInfo(sdf::ElementPtr _sdf)
     }
 
     
-    if (!_sdf->HasElement("odometryFrame")) {
+    if (!_sdf->HasElement(odometry_frame_tag)) {
         this->odometry_frame = "odom";
         ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %s.", this->odometry_frame_tag, this->odometry_frame);
     } else {
@@ -200,7 +200,7 @@ void SteeringControlPlugin::extractOdomInfo(sdf::ElementPtr _sdf)
 
 void SteeringControlPlugin::extractCmdTopic(sdf::ElementPtr _sdf)
 {
-    if (!_sdf->HasElement("commandTopic")) {
+    if (!_sdf->HasElement(command_tag)) {
         this->command_topic = "cmd_vel";
         ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %s.", this->command_tag, this->command_topic);
     } else {
