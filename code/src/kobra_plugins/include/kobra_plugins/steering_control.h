@@ -31,9 +31,10 @@ namespace gazebo
     #define LEFT_REAR "left_rear"
 
     typedef std::map<std::string, std::string> MapString;
-    typedef std::map<std::string, int> MapInt;
-    typedef std::map<std::string, physics::JointPtr> MapJoint;
     typedef MapString::const_iterator MapStrConstIterator;
+    typedef std::map<std::string, physics::JointPtr> MapJoint;
+    typedef MapJoint::const_iterator MapJointIterator;
+    typedef std::map<std::string, double> MapDouble;
 
     class SteeringControlPlugin : public ModelPlugin {
     public:
@@ -42,8 +43,9 @@ namespace gazebo
 
         void Load(physics::ModelPtr _model, sdf::ElementPtr _sdf);
 
-        void update();
-        void cmdCallback(const geometry_msgs::Twist::ConstPtr& cmd_msg);
+    protected:
+        virtual void update();
+        virtual void commandCallback(const geometry_msgs::Twist::ConstPtr &cmd_msg);
 
     protected:
         //Gazebo
@@ -66,7 +68,7 @@ namespace gazebo
         static const std::string wheel_diameter_tag;
         static const std::string update_rate_tag;
 
-        MapString joints_names;
+        MapString joints_name;
         MapJoint joints;
 
         std::string odometry_topic;
@@ -74,9 +76,8 @@ namespace gazebo
         std::string command_topic;
         std::string robot_base_frame;
 
-        MapInt wheel_speed;
-        double linear_vel;
-        double angular_vel;
+        MapDouble wheel_speed;
+        double yaw;
         double wheel_separation;
         double wheel_diameter;
         double update_rate;
@@ -90,9 +91,12 @@ namespace gazebo
         void extractRobotInfo(sdf::ElementPtr _sdf);
         void extractOdomInfo(sdf::ElementPtr _sdf);
         void extractCmdTopic(sdf::ElementPtr _sdf);
+
+        void setWheelVelocity();
+        void calculateWheelVelocity(double linear, double angular);
+        
         void publishOdometry(double step_time);
-        void getWheelVelocities();
-        void getLinearAndAngularVelocities();
+        void getWheelVelocity(MapDouble *vel);
     };
 
 GZ_REGISTER_MODEL_PLUGIN(SteeringControlPlugin)

@@ -1,9 +1,14 @@
-#include <map>
+#ifndef KOBRA_JOYSTICK_H
+#define KOBRA_JOYSTICK_H
 
+
+#include <map>
 #include <termios.h>
+#include <signal.h> 
 
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
+#include <geometry_msgs/Vector3.h>
 
 
 namespace gazebo {
@@ -74,3 +79,4 @@ namespace gazebo {
     };
 }
 
+#endif /* KOBRA_JOYSTICK_H */

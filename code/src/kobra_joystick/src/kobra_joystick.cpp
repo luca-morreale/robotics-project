@@ -129,7 +129,7 @@ KeyboardReader::~KeyboardReader()
 }
 
 
-
+using namespace std;
 
 #include <signal.h>
 

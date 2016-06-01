@@ -1,8 +1,9 @@
+
 #include "kobra_plugins/steering_control.h"
 
 using namespace gazebo;
 
-/*Tag names used in model.sdf*/
+/* Tag names used in model.sdf */
 
 const MapString joints_name_tag = {{LEFT_FRONT, "LeftFrontJoint"}, {RIGHT_FRONT, "RightFrontJoint"}, {LEFT_REAR, "LeftRearJoint"}, {RIGHT_REAR, "RightRearJoint"}};
 const std::string odometry_topic_tag = "OdometryTopic";
@@ -11,6 +12,8 @@ const std::string robot_base_frame_tag = "robotBaseFrame";
 const std::string command_tag = "CmdTopic";
 const std::string wheel_separation_tag = "wheelSeparation";
 const std::string update_rate_tag = "updateRate";
+
+
 
 void SteeringControlPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 {
@@ -36,28 +39,57 @@ void SteeringControlPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 
     ROS_DEBUG("Starting " ROS_NODE_NAME " ...");
 
-    cmd_sub = rosnode->subscribe(this->command_topic, 10, &SteeringControlPlugin::cmdCallback, this);
+    cmd_sub = rosnode->subscribe(this->command_topic, 10, &SteeringControlPlugin::commandCallback, this);
     odom_pub = rosnode->advertise<nav_msgs::Odometry>(this->odometry_topic, 1);
     
 }
 
 void SteeringControlPlugin::setDefaultValues()
 {
-    //Kobra dimesnions
-    wheel_diameter=0.145;
-    wheel_separation=0.495;
+    /* Kobra dimesnions */
+    wheel_diameter = 0.145;
+    wheel_separation = 0.495;
     update_rate = 100.0;
-    //Init velocities
+
+    /* Init velocities */
     wheel_speed[RIGHT_FRONT] = 0;
     wheel_speed[LEFT_FRONT] = 0;
     wheel_speed[RIGHT_REAR] = 0;
     wheel_speed[LEFT_REAR] = 0;
-    linear_vel=0;
-    angular_vel=0;
-    //Time between two consecutive updates
+    yaw = 0;
+    
+    /* Time between two consecutive updates */
     update_period = 1/update_rate;
-    //Initilize last update to current time
+    
+    /* Initilize last update to current time */
     last_update_time = this->world->GetSimTime();
+}
+
+void SteeringControlPlugin::commandCallback(const geometry_msgs::Twist::ConstPtr& cmd_msg)
+{
+    double linear = cmd_msg->linear.x;
+    double angular = cmd_msg->angular.z;
+
+    calculateWheelVelocity(linear, angular);
+    setWheelVelocity();
+}
+
+void SteeringControlPlugin::setWheelVelocity()
+{
+    for(MapJointIterator it = joints.begin(); it != joints.end(); ++it) {
+        joints[it->first]->SetVelocity(0, wheel_speed[it->first]);
+    }
+}
+
+void SteeringControlPlugin::calculateWheelVelocity(double linear, double angular)
+{
+    wheel_speed[RIGHT_FRONT] = linear + angular * (wheel_separation / 2);
+    wheel_speed[RIGHT_REAR] = linear + angular * (wheel_separation / 2);
+    wheel_speed[LEFT_FRONT] = linear - angular * (wheel_separation / 2);
+    wheel_speed[LEFT_REAR] = linear - angular * (wheel_separation / 2);
+
+    ROS_DEBUG("RIGHT wheels speed is now %lf", wheel_speed[RIGHT_FRONT]);
+    ROS_DEBUG("LEFT wheels speed is now %lf", wheel_speed[LEFT_FRONT]);
 }
 
 void SteeringControlPlugin::update() 
@@ -66,16 +98,42 @@ void SteeringControlPlugin::update()
     double seconds_since_last_update = (current_time - last_update_time).Double();
 
     if (seconds_since_last_update > update_period) {
-    	publishOdometry(seconds_since_last_update);
-    	//Update the time of the last update
-    	last_update_time = this->world->GetSimTime();
+        publishOdometry(seconds_since_last_update);
+        last_update_time = this->world->GetSimTime();   // Update the time of the last update
     }
 }
 
-void SteeringControlPlugin::cmdCallback(const geometry_msgs::Twist::ConstPtr& cmd_msg)
+void SteeringControlPlugin::publishOdometry(double dt)
 {
-    linear_vel = cmd_msg->linear.x;
-    angular_vel = cmd_msg->angular.z;
+    
+    MapDouble vel;
+    getWheelVelocity(&vel);
+
+    double linear = (vel[RIGHT_FRONT] + vel[LEFT_FRONT]) / 2;
+    double angular = (vel[RIGHT_FRONT] - vel[LEFT_FRONT]) / wheel_separation;
+    
+    double dx = linear * cos(yaw) * dt;
+    double dy = linear * sin(yaw) * dt;
+    yaw = yaw + angular * dt;
+    
+
+    nav_msgs::Odometry odom_msg;
+    
+    odom_msg.twist.twist.linear.x = linear;
+    odom_msg.twist.twist.angular.z = angular;
+
+    odom_msg.pose.pose.position.x = dx;
+    odom_msg.pose.pose.position.y = dy;
+    odom_msg.pose.pose.position.z = 0;
+
+    odom_pub.publish(odom_msg);
+}
+
+void SteeringControlPlugin::getWheelVelocity(MapDouble *vel)
+{
+    for(MapJointIterator it = joints.begin(); it != joints.end(); ++it) {
+        (*vel)[it->first] = joints[it->first]->GetVelocity(0);
+    }
 }
 
 
@@ -149,40 +207,6 @@ void SteeringControlPlugin::extractCmdTopic(sdf::ElementPtr _sdf)
         this->command_topic = _sdf->GetElement(command_tag)->Get<std::string>();
     }
 }
-
-void SteeringControlPlugin::getWheelVelocitiesFromCmdVel()
-{
-	wheel_speed[RIGHT_FRONT] = linear_vel + angular_vel*(wheel_separation/2);
-	wheel_speed[RIGHT_REAR] = linear_vel + angular_vel*(wheel_separation/2);
-	wheel_speed[LEFT_FRONT] = linear_vel - angular_vel*(wheel_separation/2);
-	wheel_speed[LEFT_REAR] = linear_vel - angular_vel*(wheel_separation/2);
-
-	ROS_INFO("RIGHT wheels speed is now %lf", wheel_speed[RIGHT_FRONT]);
-	ROS_INFO("LEFT wheels speed is now %lf", wheel_speed[LEFT_FRONT]);
-}
-
-void SteeringControlPlugin::getCmdVelocitiesFromWheels()
-{
-
-}
-
-void SteeringControlPlugin::publishOdometry(double step_time)
-{
-    //TODO
-    //Euler integration
-    double dt = step_time;
-    double d_x =  linear.x * dt;
-    double d_y =  linar.y * dt;
-    double d_th = angular.z * dt;
-
-    double new_x=d_x;
-    double new_y=;
-    double new_th=;
-
-    odom_msg->
-    odom_pub.publish(odom_msg);
-}
-
 
 SteeringControlPlugin::~SteeringControlPlugin()
 {
