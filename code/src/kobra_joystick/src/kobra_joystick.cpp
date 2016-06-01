@@ -125,7 +125,7 @@ void KeyboardReader::getRawKeyboard()
 
 KeyboardReader::~KeyboardReader()
 {
-    tcsetattr(KEYBOARD, TCSANOW, &old_settings);
+    tcsetattr(KEYBOARD, TCSANOW, &old_settings);					/* Set console settings back to standard ones */
 }
 
 

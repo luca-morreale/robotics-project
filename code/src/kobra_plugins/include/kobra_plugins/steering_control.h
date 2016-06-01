@@ -24,6 +24,16 @@ namespace gazebo
 {
 
     #define N_JOINTS 4
+    #define ROS_NODE_NAME "SteeringControlPlugin" 
+    #define RIGHT_FRONT "right_front"
+    #define LEFT_FRONT "left_front"
+    #define RIGHT_REAR "right_rear"
+    #define LEFT_REAR "left_rear"
+
+    typedef std::map<std::string, std::string> MapString;
+    typedef std::map<std::string, int> MapInt;
+    typedef std::map<std::string, physics::JointPtr> MapJoint;
+    typedef MapString::const_iterator MapStrConstIterator;
 
     class SteeringControlPlugin : public ModelPlugin {
     public:
@@ -35,15 +45,19 @@ namespace gazebo
         void update();
         void cmdCallback(const geometry_msgs::Twist::ConstPtr& cmd_msg);
 
-    private:
+    protected:
+        //Gazebo
         physics::ModelPtr parent;
         event::ConnectionPtr update_connection;
+        physics::WorldPtr world;
+
+        //ROS
         ros::NodeHandle *rosnode;
         ros::Subscriber cmd_sub;
         ros::Publisher odom_pub;
         nav_msgs::Odometry odom_msg;
 
-        static const std::string joints_tag_names[N_JOINTS];
+        static const MapString joints_name_tag;
         static const std::string odometry_topic_tag;
         static const std::string odometry_frame_tag;
         static const std::string robot_base_frame_tag;
@@ -52,29 +66,31 @@ namespace gazebo
         static const std::string wheel_diameter_tag;
         static const std::string update_rate_tag;
 
-        std::string joints_names[N_JOINTS];
-        physics::JointPtr joints[N_JOINTS];
+        MapString joints_names;
+        MapJoint joints;
 
         std::string odometry_topic;
         std::string odometry_frame;
         std::string command_topic;
         std::string robot_base_frame;
 
-        geometry_msgs::Vector3 linear;
-        geometry_msgs::Vector3 angular;
-        double wheel_speed[4];
+        MapInt wheel_speed;
+        double linear_vel;
+        double angular_vel;
         double wheel_separation;
         double wheel_diameter;
         double update_rate;
         double update_period;
 
+        common::Time current_time;
         common::Time last_update_time;
 
+        void setDefaultValues();
         bool extractJoints(sdf::ElementPtr _sdf);
-        void extractGeneralInfo(sdf::Element _sdf);
+        void extractRobotInfo(sdf::ElementPtr _sdf);
         void extractOdomInfo(sdf::ElementPtr _sdf);
         void extractCmdTopic(sdf::ElementPtr _sdf);
-        void publishOdometry();
+        void publishOdometry(double step_time);
         void getWheelVelocities();
         void getLinearAndAngularVelocities();
     };

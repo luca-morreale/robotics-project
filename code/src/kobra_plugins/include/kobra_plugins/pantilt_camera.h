@@ -26,6 +26,7 @@ namespace gazebo
     #define TILT "tilt"
 
     typedef std::map<std::string, std::string> MapString;
+    typedef std::map<std::string, physics::JointPtr> MapJoint;
     typedef MapString::const_iterator MapStrConstIterator;
 
     class PantTiltCameraPlugin : public ModelPlugin {
@@ -52,7 +53,7 @@ namespace gazebo
         std::string topic_name;
         std::string camera_name;
 
-        std::map<std::string, physics::JointPtr> joints;
+        MapJoint joints;
         float pan_velocity = DEFAULT_PAN_VEL;
         float tilt_velocity = DEFAULT_TILT_VEL;
 
