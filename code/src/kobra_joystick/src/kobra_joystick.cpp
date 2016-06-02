@@ -74,11 +74,11 @@ void KeyboardReader::transformCommand(char c, Command *cmd)
     switch(c) {
         case LEFT_ARROW:
             ROS_WARN("MOVE LEFT");
-            cmd->kobra_omega = velocities[ANGULAR];
+            cmd->kobra_omega = -velocities[ANGULAR];
             break;
         case RIGHT_ARROW:
             ROS_WARN("MOVE RIGHT");
-            cmd->kobra_omega = -velocities[ANGULAR];
+            cmd->kobra_omega = velocities[ANGULAR];
             break;
         case UP_ARROW:
             ROS_WARN("MOVE FORWARD");
@@ -90,19 +90,19 @@ void KeyboardReader::transformCommand(char c, Command *cmd)
             break;
         case TILT_UP:
             ROS_WARN("TILT UP");
-            cmd->camera_tilt = velocities[TILT];
+            cmd->camera_tilt = -velocities[TILT];
             break;
         case TILT_DOWN:
             ROS_WARN("TILT DOWN");
-            cmd->camera_tilt = -velocities[TILT];
+            cmd->camera_tilt = velocities[TILT];
             break;
         case PAN_LEFT:
             ROS_WARN("PAN LEFT");
-            cmd->camera_pan = velocities[PAN];
+            cmd->camera_pan = -velocities[PAN];
             break;
         case PAN_RIGHT:
             ROS_WARN("PAN RIGHT");
-            cmd->camera_pan = -velocities[PAN];
+            cmd->camera_pan = +velocities[PAN];
             break;
         default:
             ROS_WARN("NOTHING");

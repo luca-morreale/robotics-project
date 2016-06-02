@@ -515,9 +515,6 @@
         <topicName>/kobra/ptz</topicName>
         <cameraName>kobra_camera</cameraName>
     </plugin>
-    
-    
-
 
 </model>
 </sdf>
