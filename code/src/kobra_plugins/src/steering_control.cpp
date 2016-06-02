@@ -5,13 +5,14 @@ using namespace gazebo;
 
 /* Tag names used in model.sdf */
 
-const MapString joints_name_tag = {{LEFT_FRONT, "LeftFrontJoint"}, {RIGHT_FRONT, "RightFrontJoint"}, {LEFT_REAR, "LeftRearJoint"}, {RIGHT_REAR, "RightRearJoint"}};
-const std::string odometry_topic_tag = "OdometryTopic";
-const std::string odometry_frame_tag = "OdometryFrame";
-const std::string robot_base_frame_tag = "RobotBaseFrame";
-const std::string command_tag = "CmdTopic";
-const std::string wheel_separation_tag = "WheelSeparation";
-const std::string update_rate_tag = "UpdateRate";
+const MapString SteeringControlPlugin::joints_name_tag = {{LEFT_FRONT, "LeftFrontJoint"}, {RIGHT_FRONT, "RightFrontJoint"}, {LEFT_REAR, "LeftRearJoint"}, {RIGHT_REAR, "RightRearJoint"}};
+const std::string SteeringControlPlugin::odometry_topic_tag = "OdometryTopic";
+const std::string SteeringControlPlugin::odometry_frame_tag = "OdometryFrame";
+const std::string SteeringControlPlugin::robot_base_frame_tag = "RobotBaseFrame";
+const std::string SteeringControlPlugin::command_tag = "CmdTopic";
+const std::string SteeringControlPlugin::wheel_separation_tag = "WheelSeparation";
+const std::string SteeringControlPlugin::wheel_diameter_tag = "WheelDiameter";
+const std::string SteeringControlPlugin::update_rate_tag = "UpdateRate";
 
 
 

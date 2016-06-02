@@ -3,7 +3,7 @@
 
 using namespace gazebo;
 
-const MapString joints_name_tag = {{PAN, "panJoint"}, {TILT, "tiltJoint"}};
+const MapString PantTiltCameraPlugin::joints_name_tag = {{PAN, "panJoint"}, {TILT, "tiltJoint"}};
 
 /*
 <panJoint> camera_support_joint orizzontale
