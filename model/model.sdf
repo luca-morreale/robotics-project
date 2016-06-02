@@ -474,43 +474,49 @@
             <always_on>1</always_on>
             <update_rate>30</update_rate>
             <visualize>true</visualize>
+            <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+                <alwaysOn>true</alwaysOn>
+                <updateRate>0.0</updateRate>
+                <cameraName>kobra_camera</cameraName>
+                <imageTopicName>kobra/image</imageTopicName>
+                <cameraInfoTopicName>kobra/camera_info</cameraInfoTopicName>
+                <!-- not known -->
+                <hackBaseline>0.1</hackBaseline>
+                <distortionK1>0.0</distortionK1>
+                <distortionK2>0.0</distortionK2>
+                <distortionK3>0.0</distortionK3>
+                <distortionT1>0.0</distortionT1>
+                <distortionT2>0.0</distortionT2>
+            </plugin>
             </sensor>
         </link>
     </model>
     
     <!--            Plugins             -->
     
-    <plugin name="skid_steer_drive_controller" filename="libSkidSteerDrivePlugin.so">
-        <updateRate>100.0</updateRate>
-        <robotNamespace>/</robotNamespace>
-        <leftFrontJoint>left_front_wheel_joint</leftFrontJoint>
-        <rightFrontJoint>right_front_wheel_joint</rightFrontJoint>
-        <leftRearJoint>left_rear_wheel_joint</leftRearJoint>
-        <rightRearJoint>right_rear_wheel_joint</rightRearJoint>
-        <wheelSeparation>0.035</wheelSeparation>
-        <wheelDiameter>0.145</wheelDiameter>
-        <robotBaseFrame>chassis</robotBaseFrame>
-        <torque>20</torque>
-        <topicName>cmd_vel</topicName>
-        <odometryTopic>odom</odometryTopic>
-        <odometryFrame>odom</odometryFrame>
-        <broadcastTF>false</broadcastTF>
+    <plugin name="skid_steer_drive_controller" filename="libsteering_control.so">
+        <UpdateRate>100.0</UpdateRate>
+        <LeftFrontJoint>left_front_wheel_joint</LeftFrontJoint>
+        <RightFrontJoint>right_front_wheel_joint</RightFrontJoint>
+        <LeftRearJoint>left_rear_wheel_joint</LeftRearJoint>
+        <RightRearJoint>right_rear_wheel_joint</RightRearJoint>
+        <WheelSeparation>0.49</WheelSeparation>
+        <RobotBaseFrame>base_link</RobotBaseFrame>
+        <CmdTopic>cmd_vel</CmdTopic>
+        <OdometryTopic>odom</OdometryTopic>
+        <OdometryFrame>odom</OdometryFrame>
     </plugin>
     
-    <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
-        <alwaysOn>true</alwaysOn>
-        <updateRate>0.0</updateRate>
+    <plugin name="pan_tilt_camera_controller" filename="libpantilt_camera.so">
+        <panJoint>camera_support_joint</panJoint>
+        <panVelocity>0.1</panVelocity>
+        <tiltJoint>camera_junction_sphere_joint</tiltJoint>
+        <tiltVelocity>0.1</tiltVelocity>
+        <topicName>/kobra/ptz</topicName>
         <cameraName>kobra_camera</cameraName>
-        <imageTopicName>kobra/image</imageTopicName>
-        <cameraInfoTopicName>kobra/camera_info</cameraInfoTopicName>
-        <!-- not known -->
-        <hackBaseline>0.1</hackBaseline>
-        <distortionK1>0.0</distortionK1>
-        <distortionK2>0.0</distortionK2>
-        <distortionK3>0.0</distortionK3>
-        <distortionT1>0.0</distortionT1>
-        <distortionT2>0.0</distortionT2>
     </plugin>
+    
+    
 
 
 </model>

@@ -8,10 +8,10 @@ using namespace gazebo;
 const MapString joints_name_tag = {{LEFT_FRONT, "LeftFrontJoint"}, {RIGHT_FRONT, "RightFrontJoint"}, {LEFT_REAR, "LeftRearJoint"}, {RIGHT_REAR, "RightRearJoint"}};
 const std::string odometry_topic_tag = "OdometryTopic";
 const std::string odometry_frame_tag = "OdometryFrame";
-const std::string robot_base_frame_tag = "robotBaseFrame";
+const std::string robot_base_frame_tag = "RobotBaseFrame";
 const std::string command_tag = "CmdTopic";
-const std::string wheel_separation_tag = "wheelSeparation";
-const std::string update_rate_tag = "updateRate";
+const std::string wheel_separation_tag = "WheelSeparation";
+const std::string update_rate_tag = "UpdateRate";
 
 
 

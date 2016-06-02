@@ -28,10 +28,10 @@ add_message_files(
 )
 
 add_library(pantilt_camera src/pantilt_camera.cpp)
-target_link_libraries(pantilt_camera ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+target_link_libraries(pantilt_camera ${catkin_LIBRARIES} ${GAZEBO_libraries})
 
 add_library(steering_control src/steering_control.cpp)
-target_link_libraries(steering_control ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+target_link_libraries(steering_control ${catkin_LIBRARIES} ${GAZEBO_libraries})
 
 generate_messages(
   DEPENDENCIES
