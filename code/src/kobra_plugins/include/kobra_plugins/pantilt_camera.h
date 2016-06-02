@@ -37,7 +37,7 @@ namespace gazebo
         void Load(physics::ModelPtr _model, sdf::ElementPtr _sdf);
 
     protected:
-        virtual void update() { }
+        virtual void update();
         virtual void pantiltCallback(const kobra_plugins::ptz_msg::ConstPtr &msg);
         virtual void setZoom(float z) { } //advertise to camera setting and publish info! http://wiki.ros.org/camera_calibration
 
@@ -56,6 +56,7 @@ namespace gazebo
         MapJoint joints;
         float pan_velocity = DEFAULT_PAN_VEL;
         float tilt_velocity = DEFAULT_TILT_VEL;
+        bool moving = false;
 
         bool checkTags(sdf::ElementPtr _sdf);
         bool checkJointsTag(sdf::ElementPtr _sdf);
@@ -64,6 +65,7 @@ namespace gazebo
         void extractJoints(sdf::ElementPtr _sdf);
         void extractNames(sdf::ElementPtr _sdf);
         void extractVelocities(sdf::ElementPtr _sdf);
+
 
     };
 

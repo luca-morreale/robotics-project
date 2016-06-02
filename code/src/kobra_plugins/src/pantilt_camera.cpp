@@ -21,9 +21,10 @@ void PantTiltCameraPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
         return;
     }
 
+    moving = false;
     this->parent = _model;
     this->update_connection = event::Events::ConnectWorldUpdateBegin(boost::bind(&PantTiltCameraPlugin::update, this));
-
+    
     if(!checkTags(_sdf)) {
         return;
     }
@@ -37,11 +38,20 @@ void PantTiltCameraPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     rossub = rosnode->subscribe(topic_name, 10, &PantTiltCameraPlugin::pantiltCallback, this);
 }
 
+void PantTiltCameraPlugin::update() 
+{
+    if(!moving) {
+        joints[TILT]->SetVelocity(0, 0);
+        joints[PAN]->SetVelocity(0, 0); 
+    }
+}
+
 void PantTiltCameraPlugin::pantiltCallback(const kobra_plugins::ptz_msg::ConstPtr &msg)
 {
     float pan_degree = msg->pan;
     float tilt_degree = msg->tilt;
     float zoom = msg->zoom;
+    moving = true;
 
     float pan_time = pan_degree / pan_velocity;
     if(pan_time > 0){
@@ -57,7 +67,8 @@ void PantTiltCameraPlugin::pantiltCallback(const kobra_plugins::ptz_msg::ConstPt
         ros::Duration(tilt_time).sleep();
     }
 
-    joints[TILT]->SetVelocity(0, 0); 
+    joints[TILT]->SetVelocity(0, 0);
+    moving = false;
 }
 
 bool PantTiltCameraPlugin::checkTags(sdf::ElementPtr _sdf)
@@ -118,7 +129,6 @@ void PantTiltCameraPlugin::extractJoints(sdf::ElementPtr _sdf)
         //it->second tag 
         joints_name[it->first] = _sdf->GetElement(it->second)->Get<std::string>();
         joints[it->first] = this->parent->GetJoint(joints_name[it->first]);
-        joints[it->first]->SetVelocity(0, 0); 
     }
 }
 
