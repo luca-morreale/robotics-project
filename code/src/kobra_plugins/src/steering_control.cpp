@@ -63,7 +63,7 @@ void SteeringControlPlugin::setDefaultValues()
     update_period = 1/update_rate;
     
     /* Initilize last update to current time */
-    last_update_time = this->world->GetSimTime();
+    last_update_time = ros::Time::now();
 }
 
 void SteeringControlPlugin::commandCallback(const geometry_msgs::Twist::ConstPtr& cmd_msg)
@@ -95,12 +95,12 @@ void SteeringControlPlugin::calculateWheelVelocity(double linear, double angular
 
 void SteeringControlPlugin::update() 
 {
-    current_time = this->world->GetSimTime();
-    double seconds_since_last_update = (current_time - last_update_time).Double();
+    current_time = ros::Time::now();
+    double time_step = (current_time - last_update_time).toSec();
 
-    if (seconds_since_last_update > update_period) {
-        publishOdometry(seconds_since_last_update);
-        last_update_time = this->world->GetSimTime();   // Update the time of the last update
+    if (time_step > update_period) {
+        publishOdometry(time_step);
+        last_update_time = ros::Time::now();   // Update the time of the last update
     }
 }
 

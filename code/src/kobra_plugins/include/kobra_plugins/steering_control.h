@@ -83,8 +83,8 @@ namespace gazebo
         double update_rate;
         double update_period;
 
-        common::Time current_time;
-        common::Time last_update_time;
+        ros::Time current_time;
+        ros::Time last_update_time;
 
         void setDefaultValues();
         bool extractJoints(sdf::ElementPtr _sdf);
