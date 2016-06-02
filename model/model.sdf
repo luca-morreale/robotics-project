@@ -502,16 +502,16 @@
         <RightRearJoint>right_rear_wheel_joint</RightRearJoint>
         <WheelSeparation>0.49</WheelSeparation>
         <RobotBaseFrame>base_link</RobotBaseFrame>
-        <CmdTopic>cmd_vel</CmdTopic>
+        <CmdTopic>kobra/cmd_vel</CmdTopic>
         <OdometryTopic>odom</OdometryTopic>
         <OdometryFrame>odom</OdometryFrame>
     </plugin>
     
     <plugin name="pan_tilt_camera_controller" filename="libpantilt_camera.so">
         <panJoint>camera_support_joint</panJoint>
-        <panVelocity>0.1</panVelocity>
+        <panVelocity>0.5</panVelocity>
         <tiltJoint>camera_junction_sphere_joint</tiltJoint>
-        <tiltVelocity>0.1</tiltVelocity>
+        <tiltVelocity>0.7</tiltVelocity>
         <topicName>/kobra/ptz</topicName>
         <cameraName>kobra_camera</cameraName>
     </plugin>

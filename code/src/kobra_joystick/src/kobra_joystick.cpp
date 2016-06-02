@@ -4,6 +4,8 @@
 
 using namespace gazebo;
 
+struct termios old_settings;
+
 KeyboardReader::KeyboardReader()
 {
         rosnode = new ros::NodeHandle();
@@ -11,7 +13,7 @@ KeyboardReader::KeyboardReader()
         initScaleFactors();
 
         velocity_pub = rosnode->advertise<geometry_msgs::Twist>("kobra/cmd_vel", 1);
-        pantilt_pub = rosnode->advertise<geometry_msgs::Vector3>("kobra/camera_mv", 1);
+        pantilt_pub = rosnode->advertise<kobra_plugins::ptz_msg>("kobra/ptz", 1);
 }
 
 void KeyboardReader::initScaleFactors()
@@ -23,8 +25,8 @@ void KeyboardReader::initScaleFactors()
 
     rosnode->param("linear_vel", velocities[LINEAR], DEFAULT_SCALE);
     rosnode->param("angular_vel", velocities[ANGULAR], DEFAULT_SCALE);
-    rosnode->param("pan_degree", velocities[PAN], DEFAULT_SCALE);
-    rosnode->param("tilt_degree", velocities[TILT], DEFAULT_SCALE);
+    rosnode->param("pan_degree", velocities[PAN], 0.5);
+    rosnode->param("tilt_degree", velocities[TILT], 0.5);
 }
 
 void KeyboardReader::keyLoop()
@@ -33,7 +35,7 @@ void KeyboardReader::keyLoop()
 
     ROS_INFO("Reading commands from your keyboard");
     ROS_INFO("---------------------------");
-    ROS_INFO("Use A and D to pan the camera, use W and S to tilt the camera.");
+    ROS_INFO("Use A and D to pan, use W and S to tilt.");
     ROS_INFO("---------------------------");
     ROS_INFO("Use arrow keys to move the robot.");
 
@@ -45,70 +47,67 @@ void KeyboardReader::keyLoop()
             std::cerr << "read() error: " << c << std::endl;
             exit(-1);
         }
-      
-        Command *cmd = transformCommand(c);
+
+        Command cmd;
+        transformCommand(c, &cmd);
      
         geometry_msgs::Twist twist_cmd;
-        twist_cmd.angular.z = w_scale * cmd->kobra_omega;
-        twist_cmd.linear.x = l_scale * cmd->kobra_linear;
+        twist_cmd.angular.z = w_scale * cmd.kobra_omega;
+        twist_cmd.linear.x = l_scale * cmd.kobra_linear;
 
-        geometry_msgs::Vector3 pantilt_cmd;
-        pantilt_cmd.x = p_scale * cmd->camera_pan;
-        pantilt_cmd.y = t_scale * cmd->camera_tilt;
+        kobra_plugins::ptz_msg pantilt_cmd;
+        pantilt_cmd.pan = cmd.camera_pan;
+        pantilt_cmd.tilt = cmd.camera_tilt;
 
-        if(cmd->isKobra()) {
-            velocity_pub.publish(twist_cmd);
-            
-        } else if(cmd->isPanTilt()) {
+        if(cmd.isKobra()) {
+            velocity_pub.publish(twist_cmd);            
+        } else if(cmd.isPanTilt()) {
             pantilt_pub.publish(pantilt_cmd);
         }
-    }
 
-    return;
+    }
 }
 
 // DEBUG TO BE REMOVED AFTER TESTING
-Command *KeyboardReader::transformCommand(char c)
+void KeyboardReader::transformCommand(char c, Command *cmd)
 {
-    Command *cmd = (Command *) malloc(sizeof(Command));
-    
     switch(c) {
         case LEFT_ARROW:
-            ROS_DEBUG("MOVE LEFT");
+            ROS_WARN("MOVE LEFT");
             cmd->kobra_omega = velocities[ANGULAR];
             break;
         case RIGHT_ARROW:
-            ROS_DEBUG("MOVE RIGHT");
+            ROS_WARN("MOVE RIGHT");
             cmd->kobra_omega = -velocities[ANGULAR];
             break;
         case UP_ARROW:
-            ROS_DEBUG("MOVE FORWARD");
-            cmd->kobra_linear = velocities[LINEAR];
-            break;
-        case DOWN_ARROW:
-            ROS_DEBUG("MOVE BACKWARD");
+            ROS_WARN("MOVE FORWARD");
             cmd->kobra_linear = -velocities[LINEAR];
             break;
+        case DOWN_ARROW:
+            ROS_WARN("MOVE BACKWARD");
+            cmd->kobra_linear = velocities[LINEAR];
+            break;
         case TILT_UP:
-            ROS_DEBUG("TILT UP");
+            ROS_WARN("TILT UP");
             cmd->camera_tilt = velocities[TILT];
             break;
         case TILT_DOWN:
-            ROS_DEBUG("TILT DOWN");
+            ROS_WARN("TILT DOWN");
             cmd->camera_tilt = -velocities[TILT];
             break;
         case PAN_LEFT:
-            ROS_DEBUG("PAN LEFT");
+            ROS_WARN("PAN LEFT");
             cmd->camera_pan = velocities[PAN];
             break;
         case PAN_RIGHT:
-            ROS_DEBUG("PAN RIGHT");
+            ROS_WARN("PAN RIGHT");
             cmd->camera_pan = -velocities[PAN];
             break;
         default:
+            ROS_WARN("NOTHING");
             cmd->validity = false;
     }
-    return cmd;
 }
 
 void KeyboardReader::getRawKeyboard() 
@@ -123,11 +122,21 @@ void KeyboardReader::getRawKeyboard()
     tcsetattr(KEYBOARD, TCSANOW, &raw_settings);                    /* Use these new terminal i/o settings      */
 }
 
-KeyboardReader::~KeyboardReader()
-{
-    tcsetattr(KEYBOARD, TCSANOW, &old_settings);					/* Set console settings back to standard ones */
+Command::Command() {
+    kobra_omega = FZERO;
+    kobra_linear = FZERO;
+    camera_pan = FZERO;
+    camera_tilt = FZERO;
+    validity = true;
 }
 
+bool Command::isPanTilt() {
+    return validity && (this->camera_pan != FZERO || this->camera_tilt != FZERO);
+}
+        
+bool Command::isKobra() {
+    return validity && (this->kobra_omega != FZERO || this->kobra_linear != FZERO);
+}
 
 using namespace std;
 
@@ -138,10 +147,10 @@ void quit(int sig);
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "kobra_keyboard");
-    KeyboardReader joystic;
+    KeyboardReader joystick;
 
     signal(SIGINT, quit);
-    joystic.keyLoop();
+    joystick.keyLoop();
     
     return 0;
 }
@@ -150,5 +159,6 @@ void quit(int sig)
 {
     (void)sig;
     ros::shutdown();
+    tcsetattr(KEYBOARD, TCSANOW, &old_settings);                    /* Set console settings back to standard   */
     exit(0);
 }

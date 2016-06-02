@@ -10,6 +10,8 @@
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Vector3.h>
 
+#include "kobra_plugins/ptz_msg.h"
+
 
 namespace gazebo {
 
@@ -24,10 +26,10 @@ namespace gazebo {
     #define UP_ARROW     0x41
     #define DOWN_ARROW   0x42
 
-    #define TILT_UP      0x11
-    #define TILT_DOWN    0x1f
-    #define PAN_LEFT     0x1e
-    #define PAN_RIGHT    0x20
+    #define TILT_UP      'w'
+    #define TILT_DOWN    's'
+    #define PAN_LEFT     'a'
+    #define PAN_RIGHT    'd'
 
     #define FZERO 0.0
     #define DEFAULT_SCALE 2.0
@@ -35,31 +37,28 @@ namespace gazebo {
 
     typedef struct Command {
 
-        double kobra_omega = FZERO;
-        double kobra_linear = FZERO;
-        double camera_pan = FZERO;
-        double camera_tilt = FZERO;
-        bool validity = true;
+        double kobra_omega;
+        double kobra_linear;
+        double camera_pan;
+        double camera_tilt;
+        bool validity;
 
-        bool isPanTilt() {
-            return validity && (camera_pan > 0 || camera_tilt > 0);
-        }
-        
-        bool isKobra() {
-            return validity && (kobra_omega > 0 || kobra_linear > 0);
-        }
+    public:
+        Command();
+        bool isKobra();
+        bool isPanTilt();
 
     } Command;
 
     class KeyboardReader {
     public:
         KeyboardReader();
-        ~KeyboardReader();
+        ~KeyboardReader() {}
 
         void keyLoop();
 
     protected:
-        virtual Command *transformCommand(char cmd);
+        virtual void transformCommand(char c, Command *cmd);
         virtual void initScaleFactors();
 
     private:
@@ -72,7 +71,6 @@ namespace gazebo {
 
         std::map<std::string, double> velocities;
 
-        struct termios old_settings;
         struct termios raw_settings;
 
         void getRawKeyboard();
