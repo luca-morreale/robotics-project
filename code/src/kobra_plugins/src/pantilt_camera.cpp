@@ -3,7 +3,13 @@
 
 using namespace gazebo;
 
+int sign(float x) {
+    return (x > 0) - (x < 0);
+}
+
 const MapString PantTiltCameraPlugin::joints_name_tag = {{PAN, "panJoint"}, {TILT, "tiltJoint"}};
+const MapString PantTiltCameraPlugin::velocities_name_tag = {{PAN, "panVelocity"}, {TILT, "tiltVelocity"}};
+const MapString PantTiltCameraPlugin::radius_name_tag = {{PAN, "panJointRadius"}, {TILT, "tiltJointRadius"}};
 
 /*
 <panJoint> camera_support_joint orizzontale
@@ -21,7 +27,6 @@ void PantTiltCameraPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
         return;
     }
 
-    moving = false;
     this->parent = _model;
     this->update_connection = event::Events::ConnectWorldUpdateBegin(boost::bind(&PantTiltCameraPlugin::update, this));
     
@@ -32,43 +37,44 @@ void PantTiltCameraPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     extractNames(_sdf);
     extractJoints(_sdf);
     extractVelocities(_sdf);
+    extractRadius(_sdf);
 
     rosnode = new ros::NodeHandle();
 
     rossub = rosnode->subscribe(topic_name, 10, &PantTiltCameraPlugin::pantiltCallback, this);
+
 }
 
 void PantTiltCameraPlugin::update() 
 {
-    if(!moving) {
-        joints[TILT]->SetVelocity(0, 0);
-        joints[PAN]->SetVelocity(0, 0); 
-    }
+    joints[TILT]->SetVelocity(0, joint_velocity[TILT]);
+    joints[PAN]->SetVelocity(0, joint_velocity[PAN]);
 }
 
 void PantTiltCameraPlugin::pantiltCallback(const kobra_plugins::ptz_msg::ConstPtr &msg)
 {
-    float pan_degree = msg->pan;
-    float tilt_degree = msg->tilt;
-    float zoom = msg->zoom;
-    moving = true;
+    double pan_degree = msg->pan; 
+    double tilt_degree = msg->tilt; 
+    double zoom = msg->zoom;
 
-    float pan_time = pan_degree / pan_velocity;
-    if(pan_time > 0){
-        joints[PAN]->SetVelocity(0, pan_velocity);
-        ros::Duration(pan_time).sleep();
-    }
-    
-    joints[PAN]->SetVelocity(0, 0);
+ 
+    double pan_time = abs(pan_degree / velocity[PAN] * radius[PAN]);    // convertion from v to omega
+    double tilt_time = abs(tilt_degree / velocity[TILT] * radius[TILT]);
 
-    float tilt_time = tilt_degree / tilt_velocity;
     if(tilt_time > 0){
-        joints[TILT]->SetVelocity(0, tilt_velocity);
-        ros::Duration(tilt_time).sleep();
+        moveJoint(TILT, tilt_degree, tilt_time);
     }
 
-    joints[TILT]->SetVelocity(0, 0);
-    moving = false;
+    if(pan_time > 0){
+        moveJoint(PAN, pan_degree, pan_time);
+    }
+}
+
+void PantTiltCameraPlugin::moveJoint(std::string JOINT, double degree, double sleep_time)
+{
+    joint_velocity[JOINT] = velocity[JOINT] * sign(degree);
+    ros::Duration(sleep_time).sleep();
+    joint_velocity[JOINT] = 0;
 }
 
 bool PantTiltCameraPlugin::checkTags(sdf::ElementPtr _sdf)
@@ -97,7 +103,6 @@ bool PantTiltCameraPlugin::checkTopicTags(sdf::ElementPtr _sdf)
         ROS_FATAL_STREAM("PantTiltCameraPlugin: <cameraName> missing!");
         return false;
     }
-
     return true;
 }
 
@@ -109,16 +114,25 @@ void PantTiltCameraPlugin::extractNames(sdf::ElementPtr _sdf)
 
 void PantTiltCameraPlugin::extractVelocities(sdf::ElementPtr _sdf)
 {
-    if(!_sdf->HasElement("panVelocity")) {
-        ROS_WARN("PantTiltCameraPlugin: <panVelocity> missing, default value: %f", DEFAULT_PAN_VEL);
-    } else {
-        pan_velocity = _sdf->GetElement("panVelocity")->Get<float>();
+    for(MapStrConstIterator it = velocities_name_tag.begin(); it != velocities_name_tag.end(); ++it) {
+        if(!_sdf->HasElement(it->second)) {
+            velocity[it->first] = DEFAULT_VEL;
+            ROS_WARN("PantTiltCameraPlugin: <%s> missing, default value: %f", it->second, DEFAULT_VEL);
+        } else {
+            velocity[it->first] = _sdf->GetElement(it->second)->Get<double>();
+        }
     }
+}
 
-    if(!_sdf->HasElement("tiltVelocity")) {
-        ROS_WARN("PantTiltCameraPlugin: <tiltVelocity> missing, default value: %f", DEFAULT_TILT_VEL);
-    } else {
-        tilt_velocity = _sdf->GetElement("tiltVelocity")->Get<float>();
+void PantTiltCameraPlugin::extractRadius(sdf::ElementPtr _sdf)
+{
+    for(MapStrConstIterator it = radius_name_tag.begin(); it != radius_name_tag.end(); ++it) {
+        if(!_sdf->HasElement(it->second)) {
+            radius[it->first] = DEFAULT_VEL;
+            ROS_WARN("PantTiltCameraPlugin: <%s> missing, default value: %f", it->second, DEFAULT_RADIUS);
+        } else {
+            radius[it->first] = _sdf->GetElement(it->second)->Get<double>();
+        }
     }
 }
 
@@ -129,6 +143,7 @@ void PantTiltCameraPlugin::extractJoints(sdf::ElementPtr _sdf)
         //it->second tag 
         joints_name[it->first] = _sdf->GetElement(it->second)->Get<std::string>();
         joints[it->first] = this->parent->GetJoint(joints_name[it->first]);
+        joint_velocity[it->first] = 0.0;
     }
 }
 

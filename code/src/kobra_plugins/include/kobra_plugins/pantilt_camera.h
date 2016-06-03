@@ -11,6 +11,7 @@
 #include <ros/callback_queue.h>
 #include <ros/advertise_options.h>
 
+
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 
@@ -19,15 +20,15 @@
 
 namespace gazebo
 {
-    #define N_JOINTS 2
-    #define DEFAULT_PAN_VEL 0.1
-    #define DEFAULT_TILT_VEL 0.1
+    #define DEFAULT_VEL 0.7
+    #define DEFAULT_RADIUS 0.3
     #define PAN "pan"
     #define TILT "tilt"
 
     typedef std::map<std::string, std::string> MapString;
     typedef std::map<std::string, physics::JointPtr> MapJoint;
     typedef MapString::const_iterator MapStrConstIterator;
+    typedef std::map<std::string, double> MapDouble;
 
     class PantTiltCameraPlugin : public ModelPlugin {
     public:
@@ -43,6 +44,8 @@ namespace gazebo
 
     private:
         static const MapString joints_name_tag;
+        static const MapString velocities_name_tag;
+        static const MapString radius_name_tag;
 
         physics::ModelPtr parent;
         event::ConnectionPtr update_connection;
@@ -53,10 +56,11 @@ namespace gazebo
         std::string topic_name;
         std::string camera_name;
 
+
         MapJoint joints;
-        float pan_velocity = DEFAULT_PAN_VEL;
-        float tilt_velocity = DEFAULT_TILT_VEL;
-        bool moving = false;
+        MapDouble velocity;
+        MapDouble radius;
+        MapDouble joint_velocity;
 
         bool checkTags(sdf::ElementPtr _sdf);
         bool checkJointsTag(sdf::ElementPtr _sdf);
@@ -65,7 +69,9 @@ namespace gazebo
         void extractJoints(sdf::ElementPtr _sdf);
         void extractNames(sdf::ElementPtr _sdf);
         void extractVelocities(sdf::ElementPtr _sdf);
+        void extractRadius(sdf::ElementPtr _sdf);
 
+        void moveJoint(std::string JOINT, double degree, double sleep_time);
 
     };
 

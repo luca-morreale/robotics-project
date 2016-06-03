@@ -514,6 +514,8 @@
         <tiltVelocity>0.7</tiltVelocity>
         <topicName>/kobra/ptz</topicName>
         <cameraName>kobra_camera</cameraName>
+        <panJointRadius>0.01</panJointRadius>
+        <tiltJointRadius>0.0125</tiltJointRadius>
     </plugin>
 
 </model>
