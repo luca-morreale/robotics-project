@@ -5,9 +5,10 @@
 #include <algorithm>
 #include <assert.h>
 
-#include <gazebo_plugins/gazebo_ros_skid_steer_drive.h>
+#include <map>
 
-#include <gazebo/math/gzmath.hh>
+#include <gazebo/common/common.hh>
+#include <gazebo/physics/physics.hh>
 #include <sdf/sdf.hh>
 
 #include <ros/ros.h>
@@ -51,7 +52,6 @@ namespace gazebo
         //Gazebo
         physics::ModelPtr parent;
         event::ConnectionPtr update_connection;
-        physics::WorldPtr world;
 
         //ROS
         ros::NodeHandle *rosnode;
@@ -61,8 +61,6 @@ namespace gazebo
 
         static const MapString joints_name_tag;
         static const std::string odometry_topic_tag;
-        static const std::string odometry_frame_tag;
-        static const std::string robot_base_frame_tag;
         static const std::string command_tag;
         static const std::string wheel_separation_tag;
         static const std::string wheel_diameter_tag;
@@ -72,9 +70,7 @@ namespace gazebo
         MapJoint joints;
 
         std::string odometry_topic;
-        std::string odometry_frame;
         std::string command_topic;
-        std::string robot_base_frame;
 
         MapDouble wheel_speed;
         double yaw;

@@ -7,8 +7,6 @@ using namespace gazebo;
 
 const MapString SteeringControlPlugin::joints_name_tag = {{LEFT_FRONT, "LeftFrontJoint"}, {RIGHT_FRONT, "RightFrontJoint"}, {LEFT_REAR, "LeftRearJoint"}, {RIGHT_REAR, "RightRearJoint"}};
 const std::string SteeringControlPlugin::odometry_topic_tag = "OdometryTopic";
-const std::string SteeringControlPlugin::odometry_frame_tag = "OdometryFrame";
-const std::string SteeringControlPlugin::robot_base_frame_tag = "RobotBaseFrame";
 const std::string SteeringControlPlugin::command_tag = "CmdTopic";
 const std::string SteeringControlPlugin::wheel_separation_tag = "WheelSeparation";
 const std::string SteeringControlPlugin::wheel_diameter_tag = "WheelDiameter";
@@ -168,12 +166,6 @@ void SteeringControlPlugin::extractRobotInfo(sdf::ElementPtr _sdf)
         this->wheel_diameter= _sdf->GetElement(wheel_diameter_tag)->Get<double>();
     }
 
-    if (!_sdf->HasElement(robot_base_frame_tag)) {
-        ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to \"%s\"", this->robot_base_frame_tag, this->robot_base_frame);
-    } else {
-        this->robot_base_frame = _sdf->GetElement(robot_base_frame_tag)->Get<std::string>();
-    }
-
     if (!_sdf->HasElement(update_rate_tag)) {
         ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %f", this->update_rate_tag, this->update_rate);
     } else {
@@ -188,14 +180,6 @@ void SteeringControlPlugin::extractOdomInfo(sdf::ElementPtr _sdf)
         ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %s.", this->odometry_topic_tag, this->odometry_topic);
     } else {
         this->odometry_topic = _sdf->GetElement(odometry_topic_tag)->Get<std::string>();
-    }
-
-    
-    if (!_sdf->HasElement(odometry_frame_tag)) {
-        this->odometry_frame = "odom";
-        ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %s.", this->odometry_frame_tag, this->odometry_frame);
-    } else {
-        this->odometry_frame = _sdf->GetElement(odometry_frame_tag)->Get<std::string>();
     }
 }
 
