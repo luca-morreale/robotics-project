@@ -199,12 +199,12 @@
                 |	0		0	m*r^2/2 | 
             -->
             <inertia>
-                <ixx>0,001482813</ixx>
+                <ixx>0.001482813</ixx>
                 <ixy>0.0</ixy>
                 <ixz>0.0</ixz>
-                <iyy>0,001482813</iyy>
+                <iyy>0.001482813</iyy>
                 <iyz>0.0</iyz>
-                <izz>0,002628125</izz>
+                <izz>0.002628125</izz>
             </inertia>
         </inertial>
         <collision name="collision">
@@ -216,7 +216,8 @@
             </geometry>
         </collision>
         <visual name="visual">
-            <geometry>
+            <pose>0.013 0.000 -0.014 0 0 0</pose>
+            <geometry>w
                 <mesh>
                     <uri>model://kobra/meshes/right_wheel.dae</uri>
                 </mesh>
@@ -229,12 +230,12 @@
         <inertial>
             <mass>1</mass>
             <inertia>
-                <ixx>0,001482813</ixx>
+                <ixx>0.001482813</ixx>
                 <ixy>0.0</ixy>
                 <ixz>0.0</ixz>
-                <iyy>0,001482813</iyy>
+                <iyy>0.001482813</iyy>
                 <iyz>0.0</iyz>
-                <izz>0,002628125</izz>
+                <izz>0.002628125</izz>
             </inertia>
         </inertial>
         <collision name="collision">
@@ -246,6 +247,7 @@
             </geometry>
         </collision>
         <visual name="visual">
+            <pose>0.013 0.000 0.014 0 0 0</pose>
             <geometry>
             <mesh>
                 <uri>model://kobra/meshes/left_wheel.dae</uri>
@@ -259,12 +261,12 @@
         <inertial>
             <mass>1</mass>
             <inertia>
-                <ixx>0,001482813</ixx>
+                <ixx>0.001482813</ixx>
                 <ixy>0.0</ixy>
                 <ixz>0.0</ixz>
-                <iyy>0,001482813</iyy>
+                <iyy>0.001482813</iyy>
                 <iyz>0.0</iyz>
-                <izz>0,002628125</izz>
+                <izz>0.002628125</izz>
             </inertia>
         </inertial>
         <collision name="collision">
@@ -276,6 +278,7 @@
             </geometry>
         </collision>
         <visual name="visual">
+            <pose>0.013 0.000 -0.014 0 0 0</pose>
             <geometry>
                 <mesh>
                     <uri>model://kobra/meshes/right_wheel.dae</uri>
@@ -289,12 +292,12 @@
         <inertial>
             <mass>1</mass>
             <inertia>
-                <ixx>0,001482813</ixx>
+                <ixx>0.001482813</ixx>
                 <ixy>0.0</ixy>
                 <ixz>0.0</ixz>
-                <iyy>0,001482813</iyy>
+                <iyy>0.001482813</iyy>
                 <iyz>0.0</iyz>
-                <izz>0,002628125</izz>
+                <izz>0.002628125</izz>
             </inertia>
         </inertial>
         <collision name="collision">
@@ -306,6 +309,7 @@
             </geometry>
         </collision>
         <visual name="visual">
+            <pose>0.013 0.000 0.014 0 0 0</pose>
             <geometry>
                 <mesh>
                     <uri>model://kobra/meshes/left_wheel.dae</uri>
