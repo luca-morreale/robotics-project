@@ -79,15 +79,15 @@ void PantTiltCameraPlugin::moveJoint(std::string JOINT, double degree, double sl
 
 double PantTiltCameraPlugin::fixAngle(std::string JOINT, double degree)
 {
-
     math::Angle current_angle = joints[JOINT]->GetAngle(0);
+    math::Angle upLimit = math::Angle::HalfPi - math::Angle(ANGLE_GAP);
+    math::Angle downLimit = math::Angle::Zero - math::Angle::HalfPi + math::Angle(ANGLE_GAP);
 
-    if(degree < 0) {
-        return std::max((math::Angle::Pi - current_angle).Radian(), degree);
+    if(degree > 0) {
+        return std::min((upLimit - current_angle).Radian(), degree);
     } else {
-        return std::min((math::Angle::Zero - current_angle).Radian(), degree);
+        return std::max((downLimit - current_angle).Radian(), degree);
     }
-
 }
 
 bool PantTiltCameraPlugin::checkTags(sdf::ElementPtr _sdf)
