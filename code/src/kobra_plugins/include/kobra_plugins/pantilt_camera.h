@@ -3,6 +3,7 @@
 
 
 #include <map>
+#include <algorithm>
 
 #include <gazebo/common/common.hh>
 #include <gazebo/physics/physics.hh>
@@ -72,7 +73,7 @@ namespace gazebo
         void extractRadius(sdf::ElementPtr _sdf);
 
         void moveJoint(std::string JOINT, double degree, double sleep_time);
-
+        double fixAngle(std::string JOINT, double degree);
     };
 
 GZ_REGISTER_MODEL_PLUGIN(PantTiltCameraPlugin)

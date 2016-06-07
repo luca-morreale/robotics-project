@@ -53,8 +53,8 @@ void PantTiltCameraPlugin::update()
 
 void PantTiltCameraPlugin::pantiltCallback(const kobra_plugins::ptz_msg::ConstPtr &msg)
 {
-    double pan_degree = msg->pan; 
-    double tilt_degree = msg->tilt; 
+    double pan_degree = fixAngle(PAN, msg->pan); 
+    double tilt_degree = fixAngle(TILT, msg->tilt);
     double zoom = msg->zoom;
 
  
@@ -75,6 +75,19 @@ void PantTiltCameraPlugin::moveJoint(std::string JOINT, double degree, double sl
     joint_velocity[JOINT] = velocity[JOINT] * sign(degree);
     ros::Duration(sleep_time).sleep();
     joint_velocity[JOINT] = 0;
+}
+
+double PantTiltCameraPlugin::fixAngle(std::string JOINT, double degree)
+{
+
+    math::Angle current_angle = joints[JOINT]->GetAngle(0);
+
+    if(degree < 0) {
+        return std::max((math::Angle::Pi - current_angle).Radian(), degree);
+    } else {
+        return std::min((math::Angle::Zero - current_angle).Radian(), degree);
+    }
+
 }
 
 bool PantTiltCameraPlugin::checkTags(sdf::ElementPtr _sdf)
