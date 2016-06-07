@@ -3,6 +3,8 @@
 
 using namespace gazebo;
 
+const MapString TFKobraPlugin::joints_name_tag = {{PAN, "panJoint"}, {TILT, "tiltJoint"}};
+
 void TFKobraPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 {
     if (!ros::isInitialized()) {
@@ -13,7 +15,7 @@ void TFKobraPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     this->model = _model;
     this->update_connection = event::Events::ConnectWorldUpdateBegin(boost::bind(&TFKobraPlugin::update, this));
     
-    update_period = 1.0;
+    update_period = 2.0;
     node = new ros::NodeHandle();
     pub = node->advertise<geometry_msgs::Pose>("/robot_gt", 1);
 }
@@ -40,21 +42,27 @@ void TFKobraPlugin::publishTF()
     transform.setOrigin(tf::Vector3(pose.pos.x, pose.pos.y, pose.pos.z));
     transform.setRotation(tf::Quaternion(pose.rot.w, pose.rot.x, pose.rot.y, pose.rot.z));
 
-    broadcaster.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", "/basis_link"));
+    broadcaster.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", "/base_link"));
 
     tf::Transform laser_transform;
-
     laser_transform.setOrigin(tf::Vector3(0.29, -0.15, 0.10));
     broadcaster.sendTransform(tf::StampedTransform(laser_transform, ros::Time::now(), "base_link", "/laser_sensor"));
 
+    math::Pose tilt_pose = joints[TILT]->GetWorldPose();
+    math::Quaternion tilt_rot = tilt_pose.rot * pose.rot.GetInverse(); // missing rotation
     tf::Transform tilt_transform;
     tilt_transform.setOrigin(tf::Vector3(0.211, -0.15, 1.0975));
-    // missing rotation
+    tilt_transform.setRotation(tf::Quaternion(tilt_rot.w, tilt_rot.x, tilt_rot.y, tilt_rot.z));
     broadcaster.sendTransform(tf::StampedTransform(tilt_transform, ros::Time::now(), "base_link", "/tilt_joint"));
 
+    math::Pose pan_pose = joints[PAN]->GetChild()->GetRelativePose();
     tf::Transform pan_transform;
+    tf::Quaternion pan_quaternion;
     // missing position
-    // missing rotation
+    //pan_quaternion.setRPY(0.0, 2.0943, 0.0);
+    //pan_transform.setRotation(pan_quaternion);
+    pan_transform.setOrigin(tf::Vector3(pan_pose.pos.x, pan_pose.pos.y, pan_pose.pos.z));
+    pan_transform.setRotation(tf::Quaternion(pan_pose.rot.w, pan_pose.rot.x, pan_pose.rot.y, pan_pose.rot.z));
     broadcaster.sendTransform(tf::StampedTransform(pan_transform, ros::Time::now(), "tilt_joint", "/pan_joint"));
 
     tf::Transform camera_transform;
@@ -81,6 +89,16 @@ void TFKobraPlugin::publishDebugTF()
     out_pose.orientation.w = pose.rot.w;
 
     pub.publish(out_pose);
+}
+
+void TFKobraPlugin::extractJoints(sdf::ElementPtr _sdf) 
+{
+    for(MapStrConstIterator it = joints_name_tag.begin(); it != joints_name_tag.end(); ++it) {
+        //it->first PAN or TILT
+        //it->second tag 
+        joints_name[it->first] = _sdf->GetElement(it->second)->Get<std::string>();
+        joints[it->first] = this->model->GetJoint(joints_name[it->first]);
+    }
 }
 
 TFKobraPlugin::~TFKobraPlugin()

@@ -23,6 +23,12 @@
 
 namespace gazebo {
 
+    #define PAN "pan"
+    #define TILT "tilt"
+
+    typedef std::map<std::string, std::string> MapString;
+    typedef std::map<std::string, physics::JointPtr> MapJoint;
+    typedef MapString::const_iterator MapStrConstIterator;
 
     class TFKobraPlugin : public ModelPlugin {
     public:
@@ -38,18 +44,23 @@ namespace gazebo {
 
 
     private:
+        static const MapString joints_name_tag;
+        MapString joints_name;
+
         physics::ModelPtr model;
         event::ConnectionPtr update_connection;
 
         ros::NodeHandle *node;
         ros::Publisher pub;
 
+        MapJoint joints;
         tf::TransformBroadcaster broadcaster;
         
         ros::Time current_time;
         ros::Time last_update_time;
         double update_period;
 
+        void extractJoints(sdf::ElementPtr _sdf);
     };
 
     GZ_REGISTER_MODEL_PLUGIN(TFKobraPlugin)
