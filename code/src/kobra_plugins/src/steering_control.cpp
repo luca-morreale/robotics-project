@@ -10,7 +10,6 @@ const std::string SteeringControlPlugin::odometry_topic_tag = "OdometryTopic";
 const std::string SteeringControlPlugin::command_tag = "CmdTopic";
 const std::string SteeringControlPlugin::wheel_separation_tag = "WheelSeparation";
 const std::string SteeringControlPlugin::wheel_diameter_tag = "WheelDiameter";
-const std::string SteeringControlPlugin::update_rate_tag = "UpdateRate";
 
 
 
@@ -48,7 +47,6 @@ void SteeringControlPlugin::setDefaultValues()
     /* Kobra dimesnions */
     wheel_diameter = 0.145;
     wheel_separation = 0.495;
-    update_rate = 100.0;
 
     /* Init velocities */
     wheel_speed[RIGHT_FRONT] = 0;
@@ -57,8 +55,6 @@ void SteeringControlPlugin::setDefaultValues()
     wheel_speed[LEFT_REAR] = 0;
     yaw = 0;
     
-    /* Time between two consecutive updates */
-    update_period = 1/update_rate;
     
     /* Initilize last update to current time */
     last_update_time = ros::Time::now();
@@ -96,10 +92,8 @@ void SteeringControlPlugin::update()
     current_time = ros::Time::now();
     double time_step = (current_time - last_update_time).toSec();
 
-    if (time_step > update_period) {
-        publishOdometry(time_step);
-        last_update_time = ros::Time::now();   // Update the time of the last update
-    }
+    publishOdometry(time_step);
+    last_update_time = ros::Time::now();   // Update the time of the last update
 }
 
 void SteeringControlPlugin::publishOdometry(double dt)
@@ -164,12 +158,6 @@ void SteeringControlPlugin::extractRobotInfo(sdf::ElementPtr _sdf)
     	ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %s.", this->wheel_diameter_tag, this->wheel_diameter);
     } else {
         this->wheel_diameter= _sdf->GetElement(wheel_diameter_tag)->Get<double>();
-    }
-
-    if (!_sdf->HasElement(update_rate_tag)) {
-        ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %f", this->update_rate_tag, this->update_rate);
-    } else {
-        this->update_rate = _sdf->GetElement(update_rate_tag)->Get<double>();
     }
 }
 

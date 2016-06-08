@@ -64,7 +64,6 @@ namespace gazebo
         static const std::string command_tag;
         static const std::string wheel_separation_tag;
         static const std::string wheel_diameter_tag;
-        static const std::string update_rate_tag;
 
         MapString joints_name;
         MapJoint joints;
@@ -76,8 +75,6 @@ namespace gazebo
         double yaw;
         double wheel_separation;
         double wheel_diameter;
-        double update_rate;
-        double update_period;
 
         ros::Time current_time;
         ros::Time last_update_time;
