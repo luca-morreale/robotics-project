@@ -80,7 +80,8 @@ namespace gazebo
         ros::Time last_update_time;
 
         void setDefaultValues();
-        bool extractJoints(sdf::ElementPtr _sdf);
+        bool existsTags(sdf::ElementPtr _sdf);
+        void extractJoints(sdf::ElementPtr _sdf);
         void extractRobotInfo(sdf::ElementPtr _sdf);
         void extractOdomInfo(sdf::ElementPtr _sdf);
         void extractCmdTopic(sdf::ElementPtr _sdf);

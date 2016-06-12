@@ -4,11 +4,17 @@
 using namespace gazebo;
 
 const MapString TFKobraPlugin::joints_name_tag = {{PAN, "panJoint"}, {TILT, "tiltJoint"}};
+const MapString TFKobraPlugin::frames_tag = {{BASE, "baseFrame"}, {PAN, "tiltFrame"}, {TILT, "panFrame"}};
+
 
 void TFKobraPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 {
     if (!ros::isInitialized()) {
         ROS_FATAL_STREAM("A ROS node for Gazebo has not been initialized, unable to load plugin.");
+        return;
+    }
+
+    if(!existsTags(_sdf)) {
         return;
     }
 
@@ -135,11 +141,34 @@ void TFKobraPlugin::publishDebugTF()
 void TFKobraPlugin::extractJoints(sdf::ElementPtr _sdf) 
 {
     for(MapStrConstIterator it = joints_name_tag.begin(); it != joints_name_tag.end(); ++it) {
-        //it->first PAN or TILT
-        //it->second tag 
         joints_name[it->first] = _sdf->GetElement(it->second)->Get<std::string>();
         joints[it->first] = this->model->GetJoint(joints_name[it->first]);
     }
+}
+
+void TFKobraPlugin::extractFrames(sdf::ElementPtr _sdf) 
+{
+    for(MapStrConstIterator it = frames_tag.begin(); it != frames_tag.end(); ++it) {
+        frames[it->first] = _sdf->GetElement(it->second)->Get<std::string>();
+    }
+}
+
+bool TFKobraPlugin::existsTags(sdf::ElementPtr _sdf)
+{
+    for(MapStrConstIterator it = joints_name_tag.begin(); it != joints_name_tag.end(); ++it) {
+        if(!_sdf->HasElement(it->second)) {
+            ROS_FATAL_STREAM("TFKobraPlugin: <"+ it->first +"> missing!");
+            return false;
+        }
+    }
+
+    for(MapStrConstIterator it = frames_tag.begin(); it != frames_tag.end(); ++it) {
+        if(!_sdf->HasElement(it->second)) {
+            ROS_FATAL_STREAM("TFKobraPlugin: <"+ it->first +"> missing!");
+            return false;
+        }
+    }
+    return true;
 }
 
 TFKobraPlugin::~TFKobraPlugin()

@@ -26,9 +26,10 @@ void SteeringControlPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     setDefaultValues();
 
     //Extract informations from the sdf file
-    if(!extractJoints(_sdf)) {
+    if(!existsTags(_sdf)) {
         return;
     }
+    extractJoints(_sdf);
     extractRobotInfo(_sdf);
     extractOdomInfo(_sdf);
     extractCmdTopic(_sdf);
@@ -130,21 +131,25 @@ void SteeringControlPlugin::getWheelVelocity(MapDouble *vel)
 }
 
 
-bool SteeringControlPlugin::extractJoints(sdf::ElementPtr _sdf)
+bool SteeringControlPlugin::existsTags(sdf::ElementPtr _sdf)
 {
     for(MapStrConstIterator it = joints_name_tag.begin(); it != joints_name_tag.end(); ++it) {
-        //it->first PAN or TILT (key)
-        //it->second tag (value)
         if(!_sdf->HasElement(it->second)) {
             ROS_FATAL_STREAM(ROS_NODE_NAME " missing "+ it->second);
             return false;
-        } else {
-            joints_name[it->first] = _sdf->GetElement(it->second)->Get<std::string>();
-            joints[it->first] = this->parent->GetJoint(joints_name[it->first]);
         }
     }
     return true;
 }
+
+void SteeringControlPlugin::extractJoints(sdf::ElementPtr _sdf)
+{
+    for(MapStrConstIterator it = joints_name_tag.begin(); it != joints_name_tag.end(); ++it) {
+        joints_name[it->first] = _sdf->GetElement(it->second)->Get<std::string>();
+            joints[it->first] = this->parent->GetJoint(joints_name[it->first]);
+    }
+}
+
 
 void SteeringControlPlugin::extractRobotInfo(sdf::ElementPtr _sdf)
 {

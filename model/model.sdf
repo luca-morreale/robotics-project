@@ -547,8 +547,7 @@
         <WheelSeparation>0.49</WheelSeparation>
         <RobotBaseFrame>base_link</RobotBaseFrame>
         <CmdTopic>kobra/cmd_vel</CmdTopic>
-        <OdometryTopic>odom</OdometryTopic>
-        <OdometryFrame>odom</OdometryFrame>
+        <OdometryTopic>kobra/odom</OdometryTopic>
     </plugin>
     
     <plugin name="pan_tilt_camera_controller" filename="libpantilt_camera.so">
@@ -565,6 +564,9 @@
     <plugin name="tf_kobra_broadcaster" filename="libkobra_tf.so">
         <panJoint>camera_support_joint</panJoint>
         <tiltJoint>camera_junction_sphere_joint</tiltJoint>
+        <baseFrame>base_link</baseFrame>
+        <tiltFrame>tilt_frame</tiltFrame>
+        <panFrame>panFrame</panFrame>
     </plugin>
 
 </model>

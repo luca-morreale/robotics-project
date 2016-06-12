@@ -64,7 +64,7 @@ namespace gazebo
         MapDouble radius;
         MapDouble joint_velocity;
 
-        bool checkTags(sdf::ElementPtr _sdf);
+        bool existsTags(sdf::ElementPtr _sdf);
         bool checkJointsTag(sdf::ElementPtr _sdf);
         bool checkTopicTags(sdf::ElementPtr _sdf);
         

@@ -25,6 +25,7 @@ namespace gazebo {
 
     #define PAN "pan"
     #define TILT "tilt"
+    #define BASE "base"
 
     typedef std::map<std::string, std::string> MapString;
     typedef std::map<std::string, physics::JointPtr> MapJoint;
@@ -45,7 +46,10 @@ namespace gazebo {
 
     private:
         static const MapString joints_name_tag;
+        static const MapString frames_tag;
         MapString joints_name;
+        MapString frames;
+        MapJoint joints;
 
         physics::ModelPtr model;
         event::ConnectionPtr update_connection;
@@ -53,14 +57,12 @@ namespace gazebo {
         ros::NodeHandle *node;
         ros::Publisher pub;
 
-        MapJoint joints;
         tf::TransformBroadcaster broadcaster;
         
         ros::Time current_time;
         ros::Time last_update_time;
         double update_period;
 
-        void extractJoints(sdf::ElementPtr _sdf);
 
         tf::Transform buildTransform(math::Pose pose);
         tf::Transform buildRelativeTransform(math::Pose parent, math::Pose child);
@@ -70,6 +72,10 @@ namespace gazebo {
         tf::Vector3 buildOrigin(math::Vector3 pose);
         tf::Quaternion buildQuaternion(math::Pose pose);
         tf::Quaternion buildQuaternion(math::Quaternion rot);
+
+        void extractJoints(sdf::ElementPtr _sdf);
+        void extractFrames(sdf::ElementPtr _sdf);
+        bool existsTags(sdf::ElementPtr _sdf);
     };
 
     GZ_REGISTER_MODEL_PLUGIN(TFKobraPlugin)

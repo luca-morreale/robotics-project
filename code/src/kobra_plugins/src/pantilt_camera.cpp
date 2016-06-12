@@ -11,14 +11,6 @@ const MapString PantTiltCameraPlugin::joints_name_tag = {{PAN, "panJoint"}, {TIL
 const MapString PantTiltCameraPlugin::velocities_name_tag = {{PAN, "panVelocity"}, {TILT, "tiltVelocity"}};
 const MapString PantTiltCameraPlugin::radius_name_tag = {{PAN, "panJointRadius"}, {TILT, "tiltJointRadius"}};
 
-/*
-<panJoint> camera_support_joint orizzontale
-<panVelocity>
-<tiltJoint> camera_junction_sphere_joint verticale
-<tiltVelocity>
-<topicName>/kobra/ptz
-<cameraName>
-*/
 
 void PantTiltCameraPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 {
@@ -30,7 +22,7 @@ void PantTiltCameraPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     this->parent = _model;
     this->update_connection = event::Events::ConnectWorldUpdateBegin(boost::bind(&PantTiltCameraPlugin::update, this));
     
-    if(!checkTags(_sdf)) {
+    if(!existsTags(_sdf)) {
         return;
     }
 
@@ -90,7 +82,7 @@ double PantTiltCameraPlugin::fixAngle(std::string JOINT, double degree)
     }
 }
 
-bool PantTiltCameraPlugin::checkTags(sdf::ElementPtr _sdf)
+bool PantTiltCameraPlugin::existsTags(sdf::ElementPtr _sdf)
 {
     return checkJointsTag(_sdf) && checkTopicTags(_sdf);
 }
