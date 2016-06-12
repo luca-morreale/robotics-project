@@ -15,7 +15,9 @@ void TFKobraPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     this->model = _model;
     this->update_connection = event::Events::ConnectWorldUpdateBegin(boost::bind(&TFKobraPlugin::update, this));
     
-    update_period = 2.0;
+    update_period = 1/50;
+    extractJoints(_sdf);
+
     node = new ros::NodeHandle();
     pub = node->advertise<geometry_msgs::Pose>("/robot_gt", 1);
 }
@@ -37,42 +39,81 @@ void TFKobraPlugin::publishTF()
 {    
     
     math::Pose pose = model->GetWorldPose();
-    
-    tf::Transform transform;
-    transform.setOrigin(tf::Vector3(pose.pos.x, pose.pos.y, pose.pos.z));
-    transform.setRotation(tf::Quaternion(pose.rot.w, pose.rot.x, pose.rot.y, pose.rot.z));
+    broadcaster.sendTransform(tf::StampedTransform(this->buildTransform(pose), ros::Time::now(), "world", "base_link"));
 
-    broadcaster.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", "/base_link"));
-
-    tf::Transform laser_transform;
-    laser_transform.setOrigin(tf::Vector3(0.29, -0.15, 0.10));
-    broadcaster.sendTransform(tf::StampedTransform(laser_transform, ros::Time::now(), "base_link", "/laser_sensor"));
+    broadcaster.sendTransform(tf::StampedTransform(this->buildLaserTransform(), ros::Time::now(), "base_link", "laser_sensor"));
 
     math::Pose tilt_pose = joints[TILT]->GetWorldPose();
-    math::Quaternion tilt_rot = tilt_pose.rot * pose.rot.GetInverse(); // missing rotation
-    tf::Transform tilt_transform;
-    tilt_transform.setOrigin(tf::Vector3(0.211, -0.15, 1.0975));
-    tilt_transform.setRotation(tf::Quaternion(tilt_rot.w, tilt_rot.x, tilt_rot.y, tilt_rot.z));
-    broadcaster.sendTransform(tf::StampedTransform(tilt_transform, ros::Time::now(), "base_link", "/tilt_joint"));
+    broadcaster.sendTransform(tf::StampedTransform(this->buildRelativeTransform(pose, tilt_pose), ros::Time::now(), "base_link", "tilt_joint"));
 
-    math::Pose pan_pose = joints[PAN]->GetChild()->GetRelativePose();
-    tf::Transform pan_transform;
-    tf::Quaternion pan_quaternion;
-    // missing position
-    //pan_quaternion.setRPY(0.0, 2.0943, 0.0);
-    //pan_transform.setRotation(pan_quaternion);
-    pan_transform.setOrigin(tf::Vector3(pan_pose.pos.x, pan_pose.pos.y, pan_pose.pos.z));
-    pan_transform.setRotation(tf::Quaternion(pan_pose.rot.w, pan_pose.rot.x, pan_pose.rot.y, pan_pose.rot.z));
-    broadcaster.sendTransform(tf::StampedTransform(pan_transform, ros::Time::now(), "tilt_joint", "/pan_joint"));
+    math::Pose pan_pose = joints[PAN]->GetChild()->GetWorldPose();
+    broadcaster.sendTransform(tf::StampedTransform(this->buildRelativeTransform(tilt_pose, pan_pose), ros::Time::now(), "tilt_joint", "pan_joint"));
 
-    tf::Transform camera_transform;
-    tf::Quaternion camera_quaternion;
-    camera_transform.setOrigin(tf::Vector3(0.007, 0.0, -0.0025));
-    camera_quaternion.setRPY(0.0, -1.57071, 0.0);
-    camera_transform.setRotation(camera_quaternion);
-    broadcaster.sendTransform(tf::StampedTransform(camera_transform, ros::Time::now(), "pan_joint", "/camera_sensor"));
+    
+    broadcaster.sendTransform(tf::StampedTransform(this->buildCameraTransform(), ros::Time::now(), "pan_joint", "camera_sensor"));
 }
 
+tf::Transform TFKobraPlugin::buildTransform(math::Pose pose)
+{
+    tf::Transform transform;
+    transform.setOrigin(buildOrigin(pose));
+    transform.setRotation(buildQuaternion(pose));
+    return transform;
+}
+
+tf::Transform TFKobraPlugin::buildRelativeTransform(math::Pose parent, math::Pose child)
+{
+    tf::Transform relative_transform;
+    math::Quaternion relative_rot = child.rot * parent.rot.GetInverse();
+    math::Vector3 relative_pose = child.pos - parent.pos;
+    relative_pose.z *= -1;
+    relative_rot.Normalize();
+    relative_transform.setOrigin(buildOrigin(relative_pose));
+    relative_transform.setRotation(buildQuaternion(relative_rot));
+    return relative_transform;
+}
+
+tf::Transform TFKobraPlugin::buildLaserTransform()
+{
+    tf::Transform laser_transform;
+    tf::Quaternion laser_quaternion;
+    laser_transform.setOrigin(tf::Vector3(0.29, 0.0, 0.10));
+    laser_quaternion.setRPY(0.0, 0.0, 0.0);
+    laser_quaternion.normalize();
+    laser_transform.setRotation(laser_quaternion);
+    return laser_transform;
+}
+
+tf::Transform TFKobraPlugin::buildCameraTransform()
+{
+    tf::Transform camera_transform;
+    tf::Quaternion camera_quaternion;
+    camera_transform.setOrigin(tf::Vector3(0.0, 0.0, -0.0025));
+    camera_quaternion.setRPY(0.0, -1.57071, 0.0);
+    camera_quaternion.normalize();
+    camera_transform.setRotation(camera_quaternion);
+    return camera_transform;
+}
+
+tf::Vector3 TFKobraPlugin::buildOrigin(math::Pose pose)
+{
+    return tf::Vector3(pose.pos.x, pose.pos.y, pose.pos.z);
+}
+
+tf::Vector3 TFKobraPlugin::buildOrigin(math::Vector3 pose)
+{
+    return tf::Vector3(pose.x, pose.y, pose.z);
+}
+
+tf::Quaternion TFKobraPlugin::buildQuaternion(math::Pose pose)
+{
+    return tf::Quaternion(pose.rot.w, pose.rot.x, pose.rot.y, pose.rot.z);
+}
+
+tf::Quaternion TFKobraPlugin::buildQuaternion(math::Quaternion rot)
+{
+    return tf::Quaternion(rot.w, rot.x, rot.y, rot.z);
+}
 
 void TFKobraPlugin::publishDebugTF()
 {

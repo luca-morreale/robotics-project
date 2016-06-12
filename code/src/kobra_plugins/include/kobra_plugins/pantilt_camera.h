@@ -23,7 +23,7 @@ namespace gazebo
 {
     #define DEFAULT_VEL 0.7
     #define DEFAULT_RADIUS 0.3
-    #define ANGLE_GAP 1.4
+    #define ANGLE_GAP 1.0
     #define PAN "pan"
     #define TILT "tilt"
 

@@ -217,10 +217,10 @@
             <surface>
                 <friction>
                 <ode>
-                    <mu>100000.0</mu>
-                    <mu2>100000.0</mu2>
-                    <slip1>0.0</slip1>
-                    <slip2>0.0</slip2>
+                    <mu>0.01</mu>
+                    <mu2>0.01</mu2>
+                    <slip1>0.2</slip1>
+                    <slip2>0.2</slip2>
                 </ode>
                 </friction>
             </surface>
@@ -258,10 +258,10 @@
             <surface>
                 <friction>
                 <ode>
-                    <mu>100000.0</mu>
-                    <mu2>100000.0</mu2>
-                    <slip1>0.0</slip1>
-                    <slip2>0.0</slip2>
+                    <mu>0.01</mu>
+                    <mu2>0.01</mu2>
+                    <slip1>0.2</slip1>
+                    <slip2>0.2</slip2>
                 </ode>
                 </friction>
             </surface>
@@ -299,10 +299,10 @@
             <surface>
                 <friction>
                 <ode>
-                    <mu>100000.0</mu>
-                    <mu2>100000.0</mu2>
-                    <slip1>0.0</slip1>
-                    <slip2>0.0</slip2>
+                    <mu>0.01</mu>
+                    <mu2>0.01</mu2>
+                    <slip1>0.2</slip1>
+                    <slip2>0.2</slip2>
                 </ode>
                 </friction>
             </surface>
@@ -340,10 +340,10 @@
             <surface>
                 <friction>
                 <ode>
-                    <mu>100000.0</mu>
-                    <mu2>100000.0</mu2>
-                    <slip1>0.0</slip1>
-                    <slip2>0.0</slip2>
+                    <mu>0.01</mu>
+                    <mu2>0.01</mu2>
+                    <slip1>0.2</slip1>
+                    <slip2>0.2</slip2>
                 </ode>
                 </friction>
             </surface>
@@ -560,6 +560,11 @@
         <cameraName>kobra_camera</cameraName>
         <panJointRadius>0.01</panJointRadius>
         <tiltJointRadius>0.0125</tiltJointRadius>
+    </plugin>
+    
+    <plugin name="tf_kobra_broadcaster" filename="libkobra_tf.so">
+        <panJoint>camera_support_joint</panJoint>
+        <tiltJoint>camera_junction_sphere_joint</tiltJoint>
     </plugin>
 
 </model>

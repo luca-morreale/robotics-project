@@ -61,6 +61,15 @@ namespace gazebo {
         double update_period;
 
         void extractJoints(sdf::ElementPtr _sdf);
+
+        tf::Transform buildTransform(math::Pose pose);
+        tf::Transform buildRelativeTransform(math::Pose parent, math::Pose child);
+        tf::Transform buildLaserTransform();
+        tf::Transform buildCameraTransform();
+        tf::Vector3 buildOrigin(math::Pose pose);
+        tf::Vector3 buildOrigin(math::Vector3 pose);
+        tf::Quaternion buildQuaternion(math::Pose pose);
+        tf::Quaternion buildQuaternion(math::Quaternion rot);
     };
 
     GZ_REGISTER_MODEL_PLUGIN(TFKobraPlugin)
