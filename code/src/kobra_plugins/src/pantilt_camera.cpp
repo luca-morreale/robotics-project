@@ -11,14 +11,6 @@ const MapString PantTiltCameraPlugin::joints_name_tag = {{PAN, "panJoint"}, {TIL
 const MapString PantTiltCameraPlugin::velocities_name_tag = {{PAN, "panVelocity"}, {TILT, "tiltVelocity"}};
 const MapString PantTiltCameraPlugin::radius_name_tag = {{PAN, "panJointRadius"}, {TILT, "tiltJointRadius"}};
 
-/*
-<panJoint> camera_support_joint orizzontale
-<panVelocity>
-<tiltJoint> camera_junction_sphere_joint verticale
-<tiltVelocity>
-<topicName>/kobra/ptz
-<cameraName>
-*/
 
 void PantTiltCameraPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 {
@@ -30,7 +22,7 @@ void PantTiltCameraPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     this->parent = _model;
     this->update_connection = event::Events::ConnectWorldUpdateBegin(boost::bind(&PantTiltCameraPlugin::update, this));
     
-    if(!checkTags(_sdf)) {
+    if(!existsTags(_sdf)) {
         return;
     }
 
@@ -53,8 +45,8 @@ void PantTiltCameraPlugin::update()
 
 void PantTiltCameraPlugin::pantiltCallback(const kobra_plugins::ptz_msg::ConstPtr &msg)
 {
-    double pan_degree = msg->pan; 
-    double tilt_degree = msg->tilt; 
+    double pan_degree = fixAngle(PAN, msg->pan); 
+    double tilt_degree = fixAngle(TILT, msg->tilt);
     double zoom = msg->zoom;
 
  
@@ -77,7 +69,20 @@ void PantTiltCameraPlugin::moveJoint(std::string JOINT, double degree, double sl
     joint_velocity[JOINT] = 0;
 }
 
-bool PantTiltCameraPlugin::checkTags(sdf::ElementPtr _sdf)
+double PantTiltCameraPlugin::fixAngle(std::string JOINT, double degree)
+{
+    math::Angle current_angle = joints[JOINT]->GetAngle(0);
+    math::Angle upLimit = math::Angle::HalfPi - math::Angle(ANGLE_GAP);
+    math::Angle downLimit = math::Angle::Zero - math::Angle::HalfPi + math::Angle(ANGLE_GAP);
+
+    if(degree > 0) {
+        return std::min((upLimit - current_angle).Radian(), degree);
+    } else {
+        return std::max((downLimit - current_angle).Radian(), degree);
+    }
+}
+
+bool PantTiltCameraPlugin::existsTags(sdf::ElementPtr _sdf)
 {
     return checkJointsTag(_sdf) && checkTopicTags(_sdf);
 }

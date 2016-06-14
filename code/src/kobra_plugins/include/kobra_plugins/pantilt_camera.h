@@ -3,6 +3,7 @@
 
 
 #include <map>
+#include <algorithm>
 
 #include <gazebo/common/common.hh>
 #include <gazebo/physics/physics.hh>
@@ -22,6 +23,7 @@ namespace gazebo
 {
     #define DEFAULT_VEL 0.7
     #define DEFAULT_RADIUS 0.3
+    #define ANGLE_GAP 1.0
     #define PAN "pan"
     #define TILT "tilt"
 
@@ -62,7 +64,7 @@ namespace gazebo
         MapDouble radius;
         MapDouble joint_velocity;
 
-        bool checkTags(sdf::ElementPtr _sdf);
+        bool existsTags(sdf::ElementPtr _sdf);
         bool checkJointsTag(sdf::ElementPtr _sdf);
         bool checkTopicTags(sdf::ElementPtr _sdf);
         
@@ -72,7 +74,7 @@ namespace gazebo
         void extractRadius(sdf::ElementPtr _sdf);
 
         void moveJoint(std::string JOINT, double degree, double sleep_time);
-
+        double fixAngle(std::string JOINT, double degree);
     };
 
 GZ_REGISTER_MODEL_PLUGIN(PantTiltCameraPlugin)

@@ -23,6 +23,13 @@
 
 namespace gazebo {
 
+    #define PAN "pan"
+    #define TILT "tilt"
+    #define BASE "base"
+
+    typedef std::map<std::string, std::string> MapString;
+    typedef std::map<std::string, physics::JointPtr> MapJoint;
+    typedef MapString::const_iterator MapStrConstIterator;
 
     class TFKobraPlugin : public ModelPlugin {
     public:
@@ -38,6 +45,12 @@ namespace gazebo {
 
 
     private:
+        static const MapString joints_name_tag;
+        static const MapString frames_tag;
+        MapString joints_name;
+        MapString frames;
+        MapJoint joints;
+
         physics::ModelPtr model;
         event::ConnectionPtr update_connection;
 
@@ -50,6 +63,19 @@ namespace gazebo {
         ros::Time last_update_time;
         double update_period;
 
+
+        tf::Transform buildTransform(math::Pose pose);
+        tf::Transform buildRelativeTransform(math::Pose parent, math::Pose child);
+        tf::Transform buildLaserTransform();
+        tf::Transform buildCameraTransform();
+        tf::Vector3 buildOrigin(math::Pose pose);
+        tf::Vector3 buildOrigin(math::Vector3 pose);
+        tf::Quaternion buildQuaternion(math::Pose pose);
+        tf::Quaternion buildQuaternion(math::Quaternion rot);
+
+        void extractJoints(sdf::ElementPtr _sdf);
+        void extractFrames(sdf::ElementPtr _sdf);
+        bool existsTags(sdf::ElementPtr _sdf);
     };
 
     GZ_REGISTER_MODEL_PLUGIN(TFKobraPlugin)
