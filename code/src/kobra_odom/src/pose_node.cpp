@@ -12,13 +12,13 @@ bool PoseNode::Prepare() {
 
 
 void PoseNode::RunContinuously() {
-  ROS_INFO("Node %s running continuously.", ros::this_node::getName().c_str());  
-  ros::spin();
+  	ROS_INFO("Node %s running continuously.", ros::this_node::getName().c_str());  
+  	ros::spin();
 }
 
 void PoseNode::Shutdown() {
-  ROS_INFO("Node %s shutting down.", ros::this_node::getName().c_str());
-  delete rosnode;
+  	ROS_INFO("Node %s shutting down.", ros::this_node::getName().c_str());
+  	delete rosnode;
 }
 
 
@@ -103,15 +103,15 @@ void PoseNode::initPoseMsg(){
 }
 
 int main(int argc, char **argv) {
-  ros::init(argc, argv, NAME_OF_THIS_NODE);
+  	ros::init(argc, argv, NAME_OF_THIS_NODE);
   
-  PoseNode pose_node;
+  	PoseNode pose_node;
    
-  if(!pose_node.Prepare()){
-  	return (-1);
-  }
-  pose_node.RunContinuously();
-  pose_node.Shutdown();
+  	if(!pose_node.Prepare()){
+  		return (-1);
+  	}
+  	pose_node.RunContinuously();
+  	pose_node.Shutdown();
   
-  return (0);
+  	return (0);
 }
