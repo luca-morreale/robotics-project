@@ -146,7 +146,7 @@ void SteeringControlPlugin::extractJoints(sdf::ElementPtr _sdf)
 {
     for(MapStrConstIterator it = joints_name_tag.begin(); it != joints_name_tag.end(); ++it) {
         joints_name[it->first] = _sdf->GetElement(it->second)->Get<std::string>();
-            joints[it->first] = this->parent->GetJoint(joints_name[it->first]);
+        joints[it->first] = this->parent->GetJoint(joints_name[it->first]);
     }
 }
 
