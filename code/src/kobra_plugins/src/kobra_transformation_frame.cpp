@@ -25,7 +25,7 @@ void TFKobraPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     extractJoints(_sdf);
 
     node = new ros::NodeHandle();
-    pub = node->advertise<geometry_msgs::Pose>("/robot_gt", 1);
+    pub = node->advertise<geometry_msgs::Pose>("/kobra_gt", 1);
 }
 
 
