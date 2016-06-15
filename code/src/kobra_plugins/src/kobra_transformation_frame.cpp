@@ -4,7 +4,7 @@
 using namespace gazebo;
 
 const MapString TFKobraPlugin::joints_name_tag = {{PAN, "panJoint"}, {TILT, "tiltJoint"}};
-const MapString TFKobraPlugin::frames_tag = {{BASE, "baseFrame"}, {PAN, "tiltFrame"}, {TILT, "panFrame"}};
+const MapString TFKobraPlugin::frames_tag = {{BASE, "baseFrame"}, {TILT, "tiltFrame"}, {PAN, "panFrame"}};
 
 
 void TFKobraPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
@@ -23,6 +23,7 @@ void TFKobraPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     
     update_period = 1/50;
     extractJoints(_sdf);
+    extractFrames(_sdf);
 
     node = new ros::NodeHandle();
     pub = node->advertise<geometry_msgs::Pose>("/kobra_gt", 1);
@@ -45,18 +46,18 @@ void TFKobraPlugin::publishTF()
 {    
     
     math::Pose pose = model->GetWorldPose();
-    broadcaster.sendTransform(tf::StampedTransform(this->buildTransform(pose), ros::Time::now(), "world", "base_link"));
+    broadcaster.sendTransform(tf::StampedTransform(this->buildTransform(pose), ros::Time::now(), "world", frames[BASE]));
 
-    broadcaster.sendTransform(tf::StampedTransform(this->buildLaserTransform(), ros::Time::now(), "base_link", "laser_sensor"));
+    broadcaster.sendTransform(tf::StampedTransform(this->buildLaserTransform(), ros::Time::now(), frames[BASE], "laser_sensor"));
 
     math::Pose tilt_pose = joints[TILT]->GetWorldPose();
-    broadcaster.sendTransform(tf::StampedTransform(this->buildRelativeTransform(pose, tilt_pose), ros::Time::now(), "base_link", "tilt_joint"));
+    broadcaster.sendTransform(tf::StampedTransform(this->buildRelativeTransform(pose, tilt_pose), ros::Time::now(), frames[BASE], frames[TILT]));
 
     math::Pose pan_pose = joints[PAN]->GetChild()->GetWorldPose();
-    broadcaster.sendTransform(tf::StampedTransform(this->buildRelativeTransform(tilt_pose, pan_pose), ros::Time::now(), "tilt_joint", "pan_joint"));
+    broadcaster.sendTransform(tf::StampedTransform(this->buildRelativeTransform(tilt_pose, pan_pose), ros::Time::now(), frames[TILT], frames[PAN]));
 
     
-    broadcaster.sendTransform(tf::StampedTransform(this->buildCameraTransform(), ros::Time::now(), "pan_joint", "camera_sensor"));
+    broadcaster.sendTransform(tf::StampedTransform(this->buildCameraTransform(), ros::Time::now(), frames[PAN], "camera_sensor"));
 }
 
 tf::Transform TFKobraPlugin::buildTransform(math::Pose pose)
@@ -83,7 +84,7 @@ tf::Transform TFKobraPlugin::buildLaserTransform()
 {
     tf::Transform laser_transform;
     tf::Quaternion laser_quaternion;
-    laser_transform.setOrigin(tf::Vector3(0.29, 0.0, 0.10));
+    laser_transform.setOrigin(tf::Vector3(0.29, 0.0, 0.0));
     laser_quaternion.setRPY(0.0, 0.0, 0.0);
     laser_quaternion.normalize();
     laser_transform.setRotation(laser_quaternion);

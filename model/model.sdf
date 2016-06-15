@@ -566,7 +566,7 @@
         <tiltJoint>camera_junction_sphere_joint</tiltJoint>
         <baseFrame>base_link</baseFrame>
         <tiltFrame>tilt_frame</tiltFrame>
-        <panFrame>panFrame</panFrame>
+        <panFrame>pan_frame</panFrame>
     </plugin>
 
 </model>

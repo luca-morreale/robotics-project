@@ -113,5 +113,5 @@ int main(int argc, char **argv) {
   	pose_node.RunContinuously();
   	pose_node.Shutdown();
   
-  	return (0);
+  	return 0;
 }
