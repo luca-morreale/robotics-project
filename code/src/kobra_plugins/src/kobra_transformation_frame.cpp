@@ -73,7 +73,6 @@ tf::Transform TFKobraPlugin::buildRelativeTransform(math::Pose parent, math::Pos
     tf::Transform relative_transform;
     math::Quaternion relative_rot = child.rot * parent.rot.GetInverse();
     math::Vector3 relative_pose = child.pos - parent.pos;
-    relative_pose.z *= -1;
     relative_rot.Normalize();
     relative_transform.setOrigin(buildOrigin(relative_pose));
     relative_transform.setRotation(buildQuaternion(relative_rot));
@@ -114,12 +113,12 @@ tf::Vector3 TFKobraPlugin::buildOrigin(math::Vector3 pose)
 
 tf::Quaternion TFKobraPlugin::buildQuaternion(math::Pose pose)
 {
-    return tf::Quaternion(pose.rot.w, pose.rot.x, pose.rot.y, pose.rot.z);
+    return buildQuaternion(pose.rot);
 }
 
 tf::Quaternion TFKobraPlugin::buildQuaternion(math::Quaternion rot)
 {
-    return tf::Quaternion(rot.w, rot.x, rot.y, rot.z);
+    return tf::Quaternion(rot.x, rot.y, rot.z, rot.w);
 }
 
 void TFKobraPlugin::publishDebugTF()
