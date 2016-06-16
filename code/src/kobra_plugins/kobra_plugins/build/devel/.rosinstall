@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/alberto/robotics-project/code/src/kobra_plugins/build/devel/setup.sh

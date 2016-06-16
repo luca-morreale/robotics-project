@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: kobra_plugins
+Description: Description of kobra_plugins
+Version: 0.0.0
+Cflags: -I/usr/local/include
+Libs: -L/usr/local/lib 
+Requires: message_runtime roscpp gazebo_ros

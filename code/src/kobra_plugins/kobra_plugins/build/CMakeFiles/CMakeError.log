@@ -1,0 +1,57 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/alberto/robotics-project/code/src/kobra_plugins/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3370374678/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3370374678.dir/build.make CMakeFiles/cmTryCompileExec3370374678.dir/build
+make[1]: ingresso nella directory "/home/alberto/robotics-project/code/src/kobra_plugins/build/CMakeFiles/CMakeTmp"
+/usr/bin/cmake -E cmake_progress_report /home/alberto/robotics-project/code/src/kobra_plugins/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3370374678.dir/CheckSymbolExists.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec3370374678.dir/CheckSymbolExists.c.o   -c /home/alberto/robotics-project/code/src/kobra_plugins/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTryCompileExec3370374678
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3370374678.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTryCompileExec3370374678.dir/CheckSymbolExists.c.o  -o cmTryCompileExec3370374678 -rdynamic 
+CMakeFiles/cmTryCompileExec3370374678.dir/CheckSymbolExists.c.o: nella funzione "main":
+CheckSymbolExists.c:(.text+0x16): riferimento non definito a "pthread_create"
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTryCompileExec3370374678.dir/build.make:88: set di istruzioni per l'obiettivo "cmTryCompileExec3370374678" non riuscito
+make[1]: uscita dalla directory "/home/alberto/robotics-project/code/src/kobra_plugins/build/CMakeFiles/CMakeTmp"
+make[1]: *** [cmTryCompileExec3370374678] Errore 1
+Makefile:118: set di istruzioni per l'obiettivo "cmTryCompileExec3370374678/fast" non riuscito
+make: *** [cmTryCompileExec3370374678/fast] Errore 2
+
+File /home/alberto/robotics-project/code/src/kobra_plugins/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/alberto/robotics-project/code/src/kobra_plugins/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec188355248/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec188355248.dir/build.make CMakeFiles/cmTryCompileExec188355248.dir/build
+make[1]: ingresso nella directory "/home/alberto/robotics-project/code/src/kobra_plugins/build/CMakeFiles/CMakeTmp"
+/usr/bin/cmake -E cmake_progress_report /home/alberto/robotics-project/code/src/kobra_plugins/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec188355248.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTryCompileExec188355248.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.0/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec188355248
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec188355248.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTryCompileExec188355248.dir/CheckFunctionExists.c.o  -o cmTryCompileExec188355248 -rdynamic -lpthreads 
+/usr/bin/ld: impossibile trovare -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTryCompileExec188355248.dir/build.make:88: set di istruzioni per l'obiettivo "cmTryCompileExec188355248" non riuscito
+make[1]: uscita dalla directory "/home/alberto/robotics-project/code/src/kobra_plugins/build/CMakeFiles/CMakeTmp"
+make[1]: *** [cmTryCompileExec188355248] Errore 1
+Makefile:118: set di istruzioni per l'obiettivo "cmTryCompileExec188355248/fast" non riuscito
+make: *** [cmTryCompileExec188355248/fast] Errore 2
+
+

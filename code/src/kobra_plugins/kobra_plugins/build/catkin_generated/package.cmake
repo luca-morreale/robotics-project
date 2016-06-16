@@ -1,0 +1,7 @@
+set(_CATKIN_CURRENT_PACKAGE "kobra_plugins")
+set(kobra_plugins_MAINTAINER "luca <luca@todo.todo>")
+set(kobra_plugins_DEPRECATED "")
+set(kobra_plugins_VERSION "0.0.0")
+set(kobra_plugins_BUILD_DEPENDS "gazebo_ros" "roscpp" "tf" "message_generation")
+set(kobra_plugins_RUN_DEPENDS "gazebo_ros" "roscpp" "message_runtime")
+set(kobra_plugins_BUILDTOOL_DEPENDS "catkin")

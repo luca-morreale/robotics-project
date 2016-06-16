@@ -1,0 +1,8 @@
+prefix=/home/alberto/robotics-project/code/src/kobra_plugins/build/devel
+
+Name: kobra_plugins
+Description: Description of kobra_plugins
+Version: 0.0.0
+Cflags: -I/home/alberto/robotics-project/code/src/kobra_plugins/build/devel/include
+Libs: -L/home/alberto/robotics-project/code/src/kobra_plugins/build/devel/lib 
+Requires: message_runtime roscpp gazebo_ros
