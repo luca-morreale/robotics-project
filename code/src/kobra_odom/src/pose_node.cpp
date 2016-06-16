@@ -1,9 +1,11 @@
-#include "kobra_odom/pose_node.h"
+#include "kobra_odom/kobra_pose_node.h"
 
 bool PoseNode::Prepare() {
-    ROS_INFO("%s", ros::this_node::getName().c_str());
+    ROS_INFO("Preparing the node %s", ros::this_node::getName().c_str());
     initPoseValues();
     initPoseMsg();
+
+    rosnode = new ros::NodeHandle();
     odomSub = rosnode->subscribe("/kobra/odom", 10, &PoseNode::odomCallback, this);
     posePub = rosnode->advertise<geometry_msgs::PoseStamped>("/kobra/pose", 10);
     ROS_INFO("Node %s ready to run.", ros::this_node::getName().c_str());
