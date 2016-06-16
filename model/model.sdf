@@ -537,7 +537,7 @@
     </model>
     
     <!--            Plugins             -->
-    
+
     <plugin name="skid_steer_drive_controller" filename="libsteering_control.so">
         <UpdateRate>100.0</UpdateRate>
         <LeftFrontJoint>left_front_wheel_joint</LeftFrontJoint>
@@ -549,7 +549,7 @@
         <CmdTopic>kobra/cmd_vel</CmdTopic>
         <OdometryTopic>kobra/odom</OdometryTopic>
     </plugin>
-    
+
     <plugin name="pan_tilt_camera_controller" filename="libpantilt_camera.so">
         <panJoint>camera_support_joint</panJoint>
         <panVelocity>0.5</panVelocity>
@@ -560,7 +560,7 @@
         <panJointRadius>0.01</panJointRadius>
         <tiltJointRadius>0.0125</tiltJointRadius>
     </plugin>
-    
+
     <plugin name="tf_kobra_broadcaster" filename="libkobra_tf.so">
         <panJoint>camera_support_joint</panJoint>
         <tiltJoint>camera_junction_sphere_joint</tiltJoint>

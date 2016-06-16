@@ -1,4 +1,4 @@
-#include "kobra_plugins/pantilt_camera.h"
+#include "../include/kobra_plugins/pantilt_camera.h"
 
 
 using namespace gazebo;
@@ -43,7 +43,7 @@ void PantTiltCameraPlugin::update()
     joints[PAN]->SetVelocity(0, joint_velocity[PAN]);
 }
 
-void PantTiltCameraPlugin::pantiltCallback(const kobra_plugins::ptz_msg::ConstPtr &msg)
+void PantTiltCameraPlugin::pantiltCallback(const kobra_msgs::ptz_msg::ConstPtr &msg)
 {
     double pan_degree = fixAngle(PAN, msg->pan); 
     double tilt_degree = fixAngle(TILT, msg->tilt);

@@ -3,22 +3,16 @@
 
 #include <map>
 
+#include <gazebo/gazebo.hh>
 #include <gazebo/common/common.hh>
 #include <gazebo/physics/physics.hh>
 #include <sdf/sdf.hh>
 
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
-#include <tf/transform_listener.h>
-#include <geometry_msgs/Twist.h>
-#include <nav_msgs/GetMap.h>
-#include <nav_msgs/Odometry.h>
 #include <boost/bind.hpp>
-#include <boost/thread/mutex.hpp>
 
-#include <tf/transform_broadcaster.h>
-#include <turtlesim/Pose.h>
-
+#include <gazebo/transport/transport.hh>
 
 
 namespace gazebo {
@@ -56,8 +50,6 @@ namespace gazebo {
 
         ros::NodeHandle *node;
         ros::Publisher pub;
-
-        tf::TransformBroadcaster broadcaster;
         
         ros::Time current_time;
         ros::Time last_update_time;

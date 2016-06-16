@@ -1,30 +1,23 @@
-
 #ifndef STEERING_CONTROL_H
 #define STEERING_CONTROL_H
 
 #include <algorithm>
-#include <assert.h>
 
 #include <map>
 
+#include <gazebo/gazebo.hh>
 #include <gazebo/common/common.hh>
 #include <gazebo/physics/physics.hh>
 #include <sdf/sdf.hh>
 
 #include <ros/ros.h>
-#include <tf/transform_broadcaster.h>
-#include <tf/transform_listener.h>
 #include <geometry_msgs/Twist.h>
-#include <nav_msgs/GetMap.h>
 #include <nav_msgs/Odometry.h>
 #include <boost/bind.hpp>
-#include <boost/thread/mutex.hpp>
 
 
 namespace gazebo
 {
-
-    #define N_JOINTS 4
     #define ROS_NODE_NAME "SteeringControlPlugin" 
     #define RIGHT_FRONT "right_front"
     #define LEFT_FRONT "left_front"

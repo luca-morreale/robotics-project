@@ -16,7 +16,7 @@
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 
-#include "kobra_plugins/ptz_msg.h"
+#include <kobra_msgs/ptz_msg.h>
 
 
 namespace gazebo
@@ -41,7 +41,7 @@ namespace gazebo
 
     protected:
         virtual void update();
-        virtual void pantiltCallback(const kobra_plugins::ptz_msg::ConstPtr &msg);
+        virtual void pantiltCallback(const kobra_msgs::ptz_msg::ConstPtr &msg);
         virtual void setZoom(float z) { } //advertise to camera setting and publish info! http://wiki.ros.org/camera_calibration
 
     private:

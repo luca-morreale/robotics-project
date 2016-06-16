@@ -1,5 +1,4 @@
-
-#include "kobra_plugins/steering_control.h"
+#include "../include/kobra_plugins/steering_control.h"
 
 using namespace gazebo;
 
@@ -33,11 +32,8 @@ void SteeringControlPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 
     rosnode = new ros::NodeHandle();
 
-    ROS_DEBUG("Starting " ROS_NODE_NAME " ...");
-
     cmd_sub = rosnode->subscribe(this->command_topic, 10, &SteeringControlPlugin::commandCallback, this);
     odom_pub = rosnode->advertise<nav_msgs::Odometry>(this->odometry_topic, 1);
-    
 }
 
 void SteeringControlPlugin::setDefaultValues()

@@ -1,5 +1,4 @@
-
-#include "kobra_plugins/kobra_transformation_frame.h"
+#include "../include/kobra_plugins/kobra_transformation_frame.h"
 
 using namespace gazebo;
 
@@ -14,14 +13,12 @@ void TFKobraPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
         return;
     }
 
-    if(!existsTags(_sdf)) {
-        return;
-    }
-
     this->model = _model;
     this->update_connection = event::Events::ConnectWorldUpdateBegin(boost::bind(&TFKobraPlugin::update, this));
     
-    update_period = 1/50;
+    update_period = 1.0 / 50.0;
+
+    if(!existsTags(_sdf)) { return; }
     extractJoints(_sdf);
     extractFrames(_sdf);
 
@@ -43,8 +40,8 @@ void TFKobraPlugin::update()
 }
 
 void TFKobraPlugin::publishTF()
-{    
-    
+{
+    static tf::TransformBroadcaster broadcaster;
     math::Pose pose = model->GetWorldPose();
     broadcaster.sendTransform(tf::StampedTransform(this->buildTransform(pose), ros::Time::now(), "world", frames[BASE]));
 
@@ -56,7 +53,6 @@ void TFKobraPlugin::publishTF()
     math::Pose pan_pose = joints[PAN]->GetChild()->GetWorldPose();
     broadcaster.sendTransform(tf::StampedTransform(this->buildRelativeTransform(tilt_pose, pan_pose), ros::Time::now(), frames[TILT], frames[PAN]));
 
-    
     broadcaster.sendTransform(tf::StampedTransform(this->buildCameraTransform(), ros::Time::now(), frames[PAN], "camera_sensor"));
 }
 
