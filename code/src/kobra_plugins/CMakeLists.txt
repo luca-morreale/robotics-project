@@ -22,19 +22,20 @@ include_directories(include
   ${OGRE-Terrain_INCLUDE_DIRS}
   ${OGRE-Paging_INCLUDE_DIRS}
 )
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 
 add_message_files(
   FILES
   ptz_msg.msg
 )
 
-add_library(pantilt_camera src/pantilt_camera.cpp)
+add_library(pantilt_camera SHARED src/pantilt_camera.cpp)
 target_link_libraries(pantilt_camera ${catkin_LIBRARIES} ${GAZEBO_libraries})
 
-add_library(steering_control src/steering_control.cpp)
+add_library(steering_control SHARED src/steering_control.cpp)
 target_link_libraries(steering_control ${catkin_LIBRARIES} ${GAZEBO_libraries})
 
-add_library(kobra_tf src/kobra_transformation_frame.cpp)
+add_library(kobra_tf SHARED src/kobra_transformation_frame.cpp)
 target_link_libraries(kobra_tf ${catkin_LIBRARIES} ${GAZEBO_libraries})
 
 generate_messages(
@@ -47,9 +48,4 @@ catkin_package(
     roscpp 
     gazebo_ros
     CATKIN_DEPENDS message_runtime
-)
-
-install(DIRECTORY include/
-   DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
-   FILES_MATCHING PATTERN "*.h"
 )
