@@ -50,6 +50,7 @@ namespace gazebo {
 
         ros::NodeHandle *node;
         ros::Publisher pub;
+        tf::TransformBroadcaster broadcaster;
         
         ros::Time current_time;
         ros::Time last_update_time;
