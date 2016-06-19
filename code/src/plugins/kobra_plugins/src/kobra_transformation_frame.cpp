@@ -42,7 +42,7 @@ void TFKobraPlugin::update()
 void TFKobraPlugin::publishTF()
 {    
     math::Pose pose = model->GetWorldPose();
-    broadcaster.sendTransform(tf::StampedTransform(this->buildTransform(pose), ros::Time::now(), "world", frames[BASE]));
+    broadcaster.sendTransform(tf::StampedTransform(this->buildTransform(pose), ros::Time::now(), "odom", frames[BASE]));
 
     broadcaster.sendTransform(tf::StampedTransform(this->buildLaserTransform(), ros::Time::now(), frames[BASE], "laser_sensor"));
 
