@@ -1,0 +1,10 @@
+roscore
+rosrun gazebo_ros gazebo worlds/willowgarage.world
+put in 0 0 and yaw 0
+
+rosrun kobra_odom kobra_pose_node
+rosbag record -O mylaserdata /kobra/laser_scan /tf
+
+rosparam set use_sim_time true
+rosrun gmapping slam_gmapping scan:=/kobra/laser_scan
+rosbag play --clock mylaserdata.bag
