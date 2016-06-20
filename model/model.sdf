@@ -473,7 +473,8 @@
             
             <plugin name="laser_controller" filename="libgazebo_ros_laser.so">
                 <topicName>/kobra/laser_scan</topicName>
-                <frameName>hokuyo_link</frameName>
+                <frameName>laser_sensor</frameName>
+                <updateRate>0.0</updateRate>
             </plugin>
             
             <always_on>1</always_on>

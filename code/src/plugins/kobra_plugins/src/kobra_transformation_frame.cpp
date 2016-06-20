@@ -45,7 +45,7 @@ void TFKobraPlugin::publishTF()
     tf::Quaternion quaternion;
     quaternion.setRPY(0.0, 0.0, 0.0);
     quaternion.normalize();
-    broadcaster.sendTransform(tf::StampedTransform(tf::Transform(quaternion, tf::Vector3(0.0, 0.0, 0.0)), ros::Time::now(), "odom", frames[BASE]));
+    broadcaster.sendTransform(tf::StampedTransform(tf::Transform(quaternion, tf::Vector3(0.0, 0.0, 0.0)), ros::Time::now(), "/odom", frames[BASE]));
 
     broadcaster.sendTransform(tf::StampedTransform(this->buildLaserTransform(), ros::Time::now(), frames[BASE], "laser_sensor"));
 

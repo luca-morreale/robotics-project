@@ -8,7 +8,7 @@ bool PoseNode::Prepare()
 
     rosnode = new ros::NodeHandle();
     odomSub = rosnode->subscribe("/kobra/odom", 10, &PoseNode::odomCallback, this);
-    posePub = rosnode->advertise<nav_msgs::Odometry>("odom", 10);
+    posePub = rosnode->advertise<nav_msgs::Odometry>("/odom", 10);
     ROS_INFO("Node %s ready to run.", ros::this_node::getName().c_str());
     return true;
 }
