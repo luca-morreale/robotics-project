@@ -15,7 +15,7 @@ const std::string SteeringControlPlugin::wheel_diameter_tag = "WheelDiameter";
 void SteeringControlPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 {
     if (!ros::isInitialized()) {
-      ROS_FATAL_STREAM("A ROS node for Gazebo has not been initialized, unable to load plugin.");
+      //ROS_FATAL_STREAM("A ROS node for Gazebo has not been initialized, unable to load plugin.");
       return;
     }
 
@@ -77,8 +77,8 @@ void SteeringControlPlugin::calculateWheelVelocity(double linear, double angular
     wheel_speed[LEFT_FRONT] = linear - angular * (wheel_separation / 2);
     wheel_speed[LEFT_REAR] = linear - angular * (wheel_separation / 2);
 
-    ROS_DEBUG("RIGHT wheels speed is now %lf", wheel_speed[RIGHT_FRONT]);
-    ROS_DEBUG("LEFT wheels speed is now %lf", wheel_speed[LEFT_FRONT]);
+    //ROS_DEBUG("RIGHT wheels speed is now %lf", wheel_speed[RIGHT_FRONT]);
+    //ROS_DEBUG("LEFT wheels speed is now %lf", wheel_speed[LEFT_FRONT]);
 }
 
 void SteeringControlPlugin::update() 
@@ -128,7 +128,7 @@ bool SteeringControlPlugin::extractJoints(sdf::ElementPtr _sdf)
 {
     for(MapStrConstIterator it = joints_name_tag.begin(); it != joints_name_tag.end(); ++it) {
         if(!_sdf->HasElement(it->second)) {
-            ROS_FATAL_STREAM(ROS_NODE_NAME " missing "+ it->second);
+            //ROS_FATAL_STREAM(ROS_NODE_NAME " missing "+ it->second);
             return false;
         } else {
             joints_name[it->first] = _sdf->GetElement(it->second)->Get<std::string>();
@@ -141,13 +141,13 @@ bool SteeringControlPlugin::extractJoints(sdf::ElementPtr _sdf)
 void SteeringControlPlugin::extractRobotInfo(sdf::ElementPtr _sdf)
 {
     if (!_sdf->HasElement(wheel_separation_tag)) {
-    	ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %s.", this->wheel_separation_tag, this->wheel_separation);
+    	//ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %s.", this->wheel_separation_tag, this->wheel_separation);
     } else {
         this->wheel_separation= _sdf->GetElement(wheel_separation_tag)->Get<double>();
     }
 
     if (!_sdf->HasElement(wheel_diameter_tag)) {
-    	ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %s.", this->wheel_diameter_tag, this->wheel_diameter);
+    	//ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %s.", this->wheel_diameter_tag, this->wheel_diameter);
     } else {
         this->wheel_diameter= _sdf->GetElement(wheel_diameter_tag)->Get<double>();
     }
@@ -157,7 +157,7 @@ void SteeringControlPlugin::extractOdomInfo(sdf::ElementPtr _sdf)
 {    
     if (!_sdf->HasElement(odometry_topic_tag)) {
         this->odometry_topic = "odom";
-        ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %s.", this->odometry_topic_tag, this->odometry_topic);
+        //ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %s.", this->odometry_topic_tag, this->odometry_topic);
     } else {
         this->odometry_topic = _sdf->GetElement(odometry_topic_tag)->Get<std::string>();
     }
@@ -167,7 +167,7 @@ void SteeringControlPlugin::extractCmdTopic(sdf::ElementPtr _sdf)
 {
     if (!_sdf->HasElement(command_tag)) {
         this->command_topic = "cmd_vel";
-        ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %s.", this->command_tag, this->command_topic);
+        //ROS_WARN(ROS_NODE_NAME " missing <%s>, defaults to %s.", this->command_tag, this->command_topic);
     } else {
         this->command_topic = _sdf->GetElement(command_tag)->Get<std::string>();
     }

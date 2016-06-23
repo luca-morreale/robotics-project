@@ -9,7 +9,7 @@ const MapString TFKobraPlugin::frames_tag = {{BASE, "baseFrame"}, {TILT, "tiltFr
 void TFKobraPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 {
     if (!ros::isInitialized()) {
-        ROS_FATAL_STREAM("A ROS node for Gazebo has not been initialized, unable to load plugin.");
+        //ROS_FATAL_STREAM("A ROS node for Gazebo has not been initialized, unable to load plugin.");
         return;
     }
 
@@ -42,7 +42,7 @@ void TFKobraPlugin::update()
 void TFKobraPlugin::publishTF()
 {    
     math::Pose pose = model->GetWorldPose();
-    broadcaster.sendTransform(tf::StampedTransform(tf::Transform(buildTransform(pose), ros::Time::now(), "/odom", frames[BASE]));
+    broadcaster.sendTransform(tf::StampedTransform(buildTransform(pose), ros::Time::now(), "/odom", frames[BASE]));
 
     broadcaster.sendTransform(tf::StampedTransform(this->buildLaserTransform(), ros::Time::now(), frames[BASE], "laser_sensor"));
 
@@ -152,14 +152,14 @@ bool TFKobraPlugin::existsTags(sdf::ElementPtr _sdf)
 {
     for(MapStrConstIterator it = joints_name_tag.begin(); it != joints_name_tag.end(); ++it) {
         if(!_sdf->HasElement(it->second)) {
-            ROS_FATAL_STREAM("TFKobraPlugin: <"+ it->first +"> missing!");
+            //ROS_FATAL_STREAM("TFKobraPlugin: <"+ it->first +"> missing!");
             return false;
         }
     }
 
     for(MapStrConstIterator it = frames_tag.begin(); it != frames_tag.end(); ++it) {
         if(!_sdf->HasElement(it->second)) {
-            ROS_FATAL_STREAM("TFKobraPlugin: <"+ it->first +"> missing!");
+            //ROS_FATAL_STREAM("TFKobraPlugin: <"+ it->first +"> missing!");
             return false;
         }
     }
