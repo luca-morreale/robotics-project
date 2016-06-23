@@ -1,0 +1,21 @@
+<launch>
+    <!-- Parameters -->
+    <arg name="robot_name"/>
+    <arg name="init_pose"/>
+
+     <!-- We resume the logic in willowgarage_world.launch -->
+    <include file="$(find gazebo_ros)/launch/willowgarage_world.launch">
+    </include>
+
+    <!-- Spawn kobra's sdf model into gazebo (no int_pose set means 0 0 0 is the startong position)-->	
+    <node name="spawn_sdf" pkg="gazebo_ros" type="spawn_model" 
+    args="-file $(find kobra_description)/sdf/model.sdf -sdf -model kobra" />
+
+    <!-- Launch kobra_pose_node 
+    <node name="kobra_pose_node" pkg="kobra_odom" type="kobra_pose_node" >
+	<!-- Choose the integration method: set value to one among euler, kutta, exact -->
+        <param name="integration_type" value="euler"/>
+    </node>
+		
+</launch>
+
