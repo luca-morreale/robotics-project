@@ -105,7 +105,6 @@ void KeyboardReader::transformCommand(char c, Command *cmd)
             cmd->camera_pan = +velocities[PAN];
             break;
         default:
-            ROS_WARN("NOTHING");
             cmd->validity = false;
     }
 }

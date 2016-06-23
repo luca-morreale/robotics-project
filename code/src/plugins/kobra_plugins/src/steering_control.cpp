@@ -49,7 +49,6 @@ void SteeringControlPlugin::setDefaultValues()
     wheel_speed[LEFT_REAR] = 0;
     yaw = 0;
     
-    
     /* Initilize last update to current time */
     last_update_time = ros::Time::now();
 }
@@ -133,6 +132,7 @@ bool SteeringControlPlugin::extractJoints(sdf::ElementPtr _sdf)
         } else {
             joints_name[it->first] = _sdf->GetElement(it->second)->Get<std::string>();
             joints[it->first] = this->parent->GetJoint(joints_name[it->first]);
+            joints[it->first]->SetVelocityLimit(0, VELOCITY_LIMIT);
         }
     }
     return true;
