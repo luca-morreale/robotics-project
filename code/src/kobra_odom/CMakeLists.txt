@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(kobra_odom)
 
-## Find catkin macros and libraries
-## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
-## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   gazebo_ros
   geometry_msgs
@@ -17,6 +14,8 @@ find_package(catkin REQUIRED COMPONENTS
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
 ################################################
+
+catkin_package()
 
 ###########
 ## Build ##
@@ -39,6 +38,8 @@ add_executable(kobra_pose_node src/pose_node.cpp)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(kobra_pose_node ${catkin_LIBRARIES})
+
+catkin_package()
 
 #############
 ## Install ##

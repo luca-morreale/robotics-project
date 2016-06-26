@@ -59,7 +59,6 @@ void SteeringControlPlugin::commandCallback(const geometry_msgs::Twist::ConstPtr
     double angular = cmd_msg->angular.z;
 
     calculateWheelVelocity(linear, angular);
-    setWheelVelocity();
 }
 
 void SteeringControlPlugin::setWheelVelocity()
@@ -87,6 +86,7 @@ void SteeringControlPlugin::update()
 
     publishOdometry(time_step);
     last_update_time = ros::Time::now();   // Update the time of the last update
+    setWheelVelocity();
 }
 
 void SteeringControlPlugin::publishOdometry(double dt)

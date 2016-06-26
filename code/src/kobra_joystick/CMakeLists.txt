@@ -21,6 +21,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## catkin specific configuration ##
 ###################################
 
+catkin_package()
+
 ###########
 ## Build ##
 ###########
@@ -35,6 +37,8 @@ include_directories(include
 
 add_executable(joystick src/kobra_joystick.cpp)
 target_link_libraries(joystick ${catkin_LIBRARIES} )
+
+catkin_package()
 
 #############
 ## Install ##

@@ -10,7 +10,7 @@
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Vector3.h>
 
-#include "kobra_plugins/ptz_msg.h"
+#include "kobra_msgs/ptz_msg.h"
 
 
 namespace gazebo {

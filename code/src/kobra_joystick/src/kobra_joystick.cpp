@@ -13,7 +13,7 @@ KeyboardReader::KeyboardReader()
         initScaleFactors();
 
         velocity_pub = rosnode->advertise<geometry_msgs::Twist>("kobra/cmd_vel", 1);
-        pantilt_pub = rosnode->advertise<kobra_plugins::ptz_msg>("kobra/ptz", 1);
+        pantilt_pub = rosnode->advertise<kobra_msgs::ptz_msg>("kobra/ptz", 1);
 }
 
 void KeyboardReader::initScaleFactors()
@@ -55,7 +55,7 @@ void KeyboardReader::keyLoop()
         twist_cmd.angular.z = w_scale * cmd.kobra_omega;
         twist_cmd.linear.x = l_scale * cmd.kobra_linear;
 
-        kobra_plugins::ptz_msg pantilt_cmd;
+        kobra_msgs::ptz_msg pantilt_cmd;
         pantilt_cmd.pan = cmd.camera_pan;
         pantilt_cmd.tilt = cmd.camera_tilt;
 
