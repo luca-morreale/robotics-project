@@ -104,6 +104,7 @@ void SteeringControlPlugin::publishOdometry(double dt)
     
 
     nav_msgs::Odometry odom_msg;
+    odom_msg.header.stamp = ros::Time::now();
     
     odom_msg.twist.twist.linear.x = linear;
     odom_msg.twist.twist.angular.z = angular;
@@ -132,7 +133,7 @@ bool SteeringControlPlugin::extractJoints(sdf::ElementPtr _sdf)
         } else {
             joints_name[it->first] = _sdf->GetElement(it->second)->Get<std::string>();
             joints[it->first] = this->parent->GetJoint(joints_name[it->first]);
-            joints[it->first]->SetVelocityLimit(0, VELOCITY_LIMIT);
+            joints[it->first]->SetVelocityLimit(0, MAX_VELOCITY);
         }
     }
     return true;

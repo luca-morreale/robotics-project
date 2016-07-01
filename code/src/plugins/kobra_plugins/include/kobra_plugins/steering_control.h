@@ -23,7 +23,7 @@ namespace gazebo
     #define LEFT_FRONT "left_front"
     #define RIGHT_REAR "right_rear"
     #define LEFT_REAR "left_rear"
-    #define VELOCITY_LIMIT 1.0
+    #define MAX_VELOCITY 1.0
 
     typedef std::map<std::string, std::string> MapString;
     typedef MapString::const_iterator MapStrConstIterator;
