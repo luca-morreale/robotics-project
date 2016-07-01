@@ -31,7 +31,9 @@ private:
     double yaw;
     double last_msg_time;
 
-    std::string type;
+    typedef void(PoseNode::*IntegrationFunction)(double linear, double angular, double time_step);
+
+    IntegrationFunction integration;
 
     void odomCallback(const nav_msgs::Odometry::ConstPtr& msg);
     void eulerIntegration(double linear, double angular, double time_step);

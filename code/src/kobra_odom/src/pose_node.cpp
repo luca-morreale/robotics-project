@@ -33,7 +33,16 @@ void PoseNode::initPoseValues()
     rosnode->param<double>("y", y, 0.0);
     rosnode->param<double>("yaw", yaw, 0.0);
 
+    std::string type;
     rosnode->param<std::string>("integration_type", type, EULER);
+
+    if(type == EULER) {
+        integration = &PoseNode::eulerIntegration;
+    } else if(type == KUTTA) {
+        integration = &PoseNode::rungeKuttaIntegration;
+    } else if(type == EXACT) {
+        integration = &PoseNode::exactIntegration;
+    }
 
     last_msg_time = -1.0;
 }
@@ -55,13 +64,7 @@ void PoseNode::odomCallback(const nav_msgs::Odometry::ConstPtr& msg)
     }
 
     // Perform Integration
-    if(type == EULER) {
-        eulerIntegration(linear, angular, time_step);
-    } else if(type == KUTTA) {
-        rungeKuttaIntegration(linear, angular, time_step);
-    } else if(type == EXACT) {
-        exactIntegration(linear, angular, time_step);
-    }
+    (this->*integration)(linear, angular, time_step);
     
     //Create Odometry message
     nav_msgs::Odometry out;
