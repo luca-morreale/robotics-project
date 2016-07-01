@@ -1,10 +1,11 @@
 #ifndef ODOM_NODE_H
 #define ODOM_NODE_H
 
-#include "ros/ros.h"
-#include "nav_msgs/Odometry.h"
-#include "geometry_msgs/PoseStamped.h"
-#include "nav_msgs/Odometry.h"
+#include <ros/ros.h>
+#include <tf/transform_broadcaster.h>
+#include <nav_msgs/Odometry.h>
+#include <geometry_msgs/PoseStamped.h>
+#include <nav_msgs/Odometry.h>
 #include <math.h>
 
 #define RUN_PERIOD_DEFAULT 0.001
@@ -33,9 +34,9 @@ private:
     std::string type;
 
     void odomCallback(const nav_msgs::Odometry::ConstPtr& msg);
-    void eulerIntegration(double linear, double angular, double time_step, nav_msgs::Odometry &msg);
-    void rungeKuttaIntegration(double linear, double angular, double time_step, nav_msgs::Odometry &msg);
-    void exactIntegration(double linear, double angular, double time_step, nav_msgs::Odometry &msg);
+    void eulerIntegration(double linear, double angular, double time_step);
+    void rungeKuttaIntegration(double linear, double angular, double time_step);
+    void exactIntegration(double linear, double angular, double time_step);
     void initPoseMsg(nav_msgs::Odometry &msg);
     void setPoseValues(nav_msgs::Odometry &msg, double linear, double angular);
     void initPoseValues();

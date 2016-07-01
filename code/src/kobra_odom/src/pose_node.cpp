@@ -1,5 +1,5 @@
 #include "kobra_odom/pose_node.h"
-#include <tf/transform_broadcaster.h>
+
 
 bool PoseNode::Prepare() 
 {
@@ -40,71 +40,67 @@ void PoseNode::initPoseValues()
 
 void PoseNode::odomCallback(const nav_msgs::Odometry::ConstPtr& msg) 
 {
-	// Init
+	// Init -- extract cmd_velocities from the msg
     if(last_msg_time < 0) {
         last_msg_time = msg->header.stamp.toSec();
         return;
     }
 
-    float linear = msg->twist.twist.linear.x;
-    float angular = msg->twist.twist.angular.z;
+    double linear = msg->twist.twist.linear.x;
+    double angular = msg->twist.twist.angular.z;
     double time_step = msg->header.stamp.toSec() - last_msg_time;
 
     if(time_step < RUN_PERIOD_DEFAULT) {
         return;
     }
 
-    nav_msgs::Odometry out;
-    out.header = msg->header;
-    initPoseMsg(out);
-
     // Perform Integration
     if(type == EULER) {
-        eulerIntegration(linear, angular, time_step, out);
+        eulerIntegration(linear, angular, time_step);
     } else if(type == KUTTA) {
-        rungeKuttaIntegration(linear, angular, time_step, out);
+        rungeKuttaIntegration(linear, angular, time_step);
     } else if(type == EXACT) {
-        exactIntegration(linear, angular, time_step, out);
+        exactIntegration(linear, angular, time_step);
     }
     
+    //Create Odometry message
+    nav_msgs::Odometry out;
+    out.header = msg->header;
+
+    initPoseMsg(out);
     setPoseValues(out, linear, angular);
+
     posePub.publish(out);
     
    	last_msg_time = msg->header.stamp.toSec();
 }
 
-void PoseNode::eulerIntegration(double linear, double angular, double time_step, nav_msgs::Odometry &msg)
+void PoseNode::eulerIntegration(double linear, double angular, double time_step)
 {
-	x = x + linear * cos(yaw) * time_step;
+    x = x + linear * cos(yaw) * time_step;
     y = y + linear * sin(yaw) * time_step;
     yaw = yaw + angular * time_step;
-
-    msg.pose.pose.position.x = x;
-    msg.pose.pose.position.y = y;
-    msg.pose.pose.orientation.z = yaw;
 }
 
-void PoseNode::rungeKuttaIntegration(double linear, double angular, double time_step, nav_msgs::Odometry &msg)
+void PoseNode::rungeKuttaIntegration(double linear, double angular, double time_step)
 {
-	x = x + linear * time_step * cos(yaw+(angular * time_step) / 2);
+    x = x + linear * time_step * cos(yaw+(angular * time_step) / 2);
     y = y + linear * time_step * sin(yaw+(angular * time_step) / 2);
     yaw = yaw + angular * time_step;
-
-    msg.pose.pose.position.x = x;
-    msg.pose.pose.position.y = y;
-    msg.pose.pose.orientation.z = yaw;
 }
-void PoseNode::exactIntegration(double linear, double angular, double time_step, nav_msgs::Odometry &msg)
+
+void PoseNode::exactIntegration(double linear, double angular, double time_step)
 {
-	double yaw_old = yaw;
-	double yaw_new = yaw_old + angular*time_step;
-	x = x + (linear / angular) * (sin(yaw_new) - sin(yaw_old));
+    double yaw_old = yaw;
+    double yaw_new = yaw_old + angular*time_step;
+    x = x + (linear / angular) * (sin(yaw_new) - sin(yaw_old));
     y = y + (linear / angular) * (cos(yaw_new) - cos(yaw_old));
     yaw = yaw_new;
 }
 
 void PoseNode::initPoseMsg(nav_msgs::Odometry &msg)
 {
+    msg.header.frame_id = "/odom";
     msg.child_frame_id = "/base_link";
     msg.pose.pose.orientation.x = 0.0;
     msg.pose.pose.orientation.y = 0.0;
