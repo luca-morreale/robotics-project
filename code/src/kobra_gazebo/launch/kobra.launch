@@ -11,7 +11,7 @@
     <node name="spawn_sdf" pkg="gazebo_ros" type="spawn_model" 
     args="-file $(find kobra_description)/sdf/model.sdf -sdf -model kobra" />
 
-    <!-- Launch kobra_pose_node 
+    <!-- Launch kobra_pose_node -->
     <node name="kobra_pose_node" pkg="kobra_odom" type="kobra_pose_node" >
 	<!-- Choose the integration method: set value to one among euler, kutta, exact -->
         <param name="integration_type" value="euler"/>
