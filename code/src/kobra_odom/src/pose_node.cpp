@@ -49,6 +49,7 @@ void PoseNode::initPoseValues()
 
 void PoseNode::odomCallback(const nav_msgs::Odometry::ConstPtr& msg) 
 {
+    nav_msgs::Odometry in = *msg;
 	// Init -- extract cmd_velocities from the msg
     if(last_msg_time < 0) {
         last_msg_time = msg->header.stamp.toSec();
@@ -62,27 +63,32 @@ void PoseNode::odomCallback(const nav_msgs::Odometry::ConstPtr& msg)
     if(time_step < RUN_PERIOD_DEFAULT) {
         return;
     }
+    ROS_INFO("%f %f", linear, angular);
 
     // Perform Integration
     (this->*integration)(linear, angular, time_step);
     
+    //Publish the transformation over tf
+    broadcastTransformation(msg);
+
     //Create Odometry message
-    nav_msgs::Odometry out;
-    out.header = msg->header;
-
-    initPoseMsg(out);
-    setPoseValues(out, linear, angular);
-
-    posePub.publish(out);
+    publishOdometryMessage(linear,angular, msg);
     
    	last_msg_time = msg->header.stamp.toSec();
 }
 
 void PoseNode::eulerIntegration(double linear, double angular, double time_step)
 {
+    ROS_INFO("\n");   
+    ROS_INFO("vel %f %f", linear, angular);
+    ROS_INFO("coord %f %f %f %f", x, y, yaw, time_step);
+    
+
     x = x + linear * cos(yaw) * time_step;
     y = y + linear * sin(yaw) * time_step;
     yaw = yaw + angular * time_step;
+
+    ROS_INFO("end %f %f %f", x, y, yaw);
 }
 
 void PoseNode::rungeKuttaIntegration(double linear, double angular, double time_step)
@@ -95,33 +101,47 @@ void PoseNode::rungeKuttaIntegration(double linear, double angular, double time_
 void PoseNode::exactIntegration(double linear, double angular, double time_step)
 {
     double yaw_old = yaw;
-    double yaw_new = yaw_old + angular*time_step;
+    double yaw_new = yaw_old + angular * time_step;
     x = x + (linear / angular) * (sin(yaw_new) - sin(yaw_old));
     y = y + (linear / angular) * (cos(yaw_new) - cos(yaw_old));
     yaw = yaw_new;
 }
 
-void PoseNode::initPoseMsg(nav_msgs::Odometry &msg)
+void PoseNode::publishOdometryMessage(double linear, double angular, const nav_msgs::Odometry::ConstPtr& old_msg)
 {
-    msg.header.frame_id = "/odom";
-    msg.child_frame_id = "/base_link";
-    msg.pose.pose.orientation.x = 0.0;
-    msg.pose.pose.orientation.y = 0.0;
-    msg.pose.pose.orientation.z = 0.0;
-    msg.pose.pose.orientation.w = 0.0;
-    msg.pose.pose.position.x = 0.0;
-    msg.pose.pose.position.y = 0.0;
-    msg.pose.pose.position.z = 0.0;   
-}
+    nav_msgs::Odometry msg;
+    msg.header.stamp = old_msg->header.stamp;
+    msg.header.frame_id="/map";
+    msg.child_frame_id = "/odom";
 
-void PoseNode::setPoseValues(nav_msgs::Odometry &msg, double linear, double angular)
-{
+    //set position
     msg.pose.pose.position.x = x;
     msg.pose.pose.position.y = y;
+    msg.pose.pose.position.z = 0.0;
     msg.pose.pose.orientation = tf::createQuaternionMsgFromYaw(yaw);
 
+    //set velocity
     msg.twist.twist.linear.x = linear;
+    msg.twist.twist.linear.y = 0.0;
     msg.twist.twist.angular.z = angular;
+
+    posePub.publish(msg);
+}
+
+void PoseNode::broadcastTransformation(const nav_msgs::Odometry::ConstPtr& old_msg)
+{
+    geometry_msgs::TransformStamped odom_trans;
+
+    odom_trans.header.stamp = old_msg->header.stamp;
+    odom_trans.header.frame_id = "/map";
+    odom_trans.child_frame_id = "/odom";
+
+    odom_trans.transform.translation.x = x;
+    odom_trans.transform.translation.y = y;
+    odom_trans.transform.translation.z = 0.0;
+    odom_trans.transform.rotation = tf::createQuaternionMsgFromYaw(yaw);
+
+    odom_broadcaster.sendTransform(odom_trans);
 }
 
 

@@ -8,7 +8,7 @@
 #include <nav_msgs/Odometry.h>
 #include <math.h>
 
-#define RUN_PERIOD_DEFAULT 0.001
+#define RUN_PERIOD_DEFAULT 0.1
 #define NAME_OF_THIS_NODE "pose_node"
 #define EULER "euler"
 #define KUTTA "kutta"
@@ -25,6 +25,7 @@ private:
     ros::NodeHandle *rosnode;
     ros::Subscriber odomSub;
     ros::Publisher posePub;
+    tf::TransformBroadcaster odom_broadcaster;
     
     double x;
     double y;
@@ -39,9 +40,10 @@ private:
     void eulerIntegration(double linear, double angular, double time_step);
     void rungeKuttaIntegration(double linear, double angular, double time_step);
     void exactIntegration(double linear, double angular, double time_step);
-    void initPoseMsg(nav_msgs::Odometry &msg);
-    void setPoseValues(nav_msgs::Odometry &msg, double linear, double angular);
     void initPoseValues();
+
+    void publishOdometryMessage(double linear, double angular, const nav_msgs::Odometry::ConstPtr& msg);
+    void broadcastTransformation(const nav_msgs::Odometry::ConstPtr& old_msg);
 
 };
 
