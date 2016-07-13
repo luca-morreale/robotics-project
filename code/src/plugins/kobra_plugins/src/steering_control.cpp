@@ -64,7 +64,8 @@ void SteeringControlPlugin::commandCallback(const geometry_msgs::Twist::ConstPtr
 void SteeringControlPlugin::setWheelVelocity()
 {
     for(MapJointIterator it = joints.begin(); it != joints.end(); ++it) {
-        joints[it->first]->SetVelocity(0, wheel_speed[it->first]);
+        // transformation from linear velocity to speed of the wheel
+        joints[it->first]->SetVelocity(0, wheel_speed[it->first] / (wheel_diameter / 2.0));
     }
 }
 
@@ -77,6 +78,14 @@ void SteeringControlPlugin::calculateWheelVelocity(double linear, double angular
 
     //ROS_DEBUG("RIGHT wheels speed is now %lf", wheel_speed[RIGHT_FRONT]);
     //ROS_DEBUG("LEFT wheels speed is now %lf", wheel_speed[LEFT_FRONT]);
+}
+
+void SteeringControlPlugin::getWheelVelocity(MapDouble *vel)
+{
+    for(MapJointIterator it = joints.begin(); it != joints.end(); ++it) {
+        // transformation from speed of the wheel to the speed of the center
+        (*vel)[it->first] = joints[it->first]->GetVelocity(0) * (wheel_diameter / 2.0);
+    }
 }
 
 void SteeringControlPlugin::update() 
@@ -115,14 +124,6 @@ void SteeringControlPlugin::publishOdometry(double dt)
 
     odom_pub.publish(odom_msg);
 }
-
-void SteeringControlPlugin::getWheelVelocity(MapDouble *vel)
-{
-    for(MapJointIterator it = joints.begin(); it != joints.end(); ++it) {
-        (*vel)[it->first] = joints[it->first]->GetVelocity(0);
-    }
-}
-
 
 bool SteeringControlPlugin::extractJoints(sdf::ElementPtr _sdf)
 {

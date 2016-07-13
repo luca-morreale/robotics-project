@@ -32,7 +32,7 @@ namespace gazebo {
     #define PAN_RIGHT    'd'
 
     #define FZERO 0.0
-    #define DEFAULT_SCALE 2.0
+    #define DEFAULT_SCALE 1.0
 
 
     typedef struct Command {

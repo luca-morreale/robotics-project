@@ -63,7 +63,6 @@ void PoseNode::odomCallback(const nav_msgs::Odometry::ConstPtr& msg)
     if(time_step < RUN_PERIOD_DEFAULT) {
         return;
     }
-    ROS_INFO("%f %f", linear, angular);
 
     // Perform Integration
     (this->*integration)(linear, angular, time_step);
@@ -79,16 +78,9 @@ void PoseNode::odomCallback(const nav_msgs::Odometry::ConstPtr& msg)
 
 void PoseNode::eulerIntegration(double linear, double angular, double time_step)
 {
-    ROS_INFO("\n");   
-    ROS_INFO("vel %f %f", linear, angular);
-    ROS_INFO("coord %f %f %f %f", x, y, yaw, time_step);
-    
-
     x = x + linear * cos(yaw) * time_step;
     y = y + linear * sin(yaw) * time_step;
     yaw = yaw + angular * time_step;
-
-    ROS_INFO("end %f %f %f", x, y, yaw);
 }
 
 void PoseNode::rungeKuttaIntegration(double linear, double angular, double time_step)
