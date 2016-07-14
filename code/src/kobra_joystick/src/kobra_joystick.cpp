@@ -74,19 +74,19 @@ void KeyboardReader::transformCommand(char c, Command *cmd)
     switch(c) {
         case LEFT_ARROW:
             ROS_WARN("MOVE LEFT");
-            cmd->kobra_omega = -velocities[ANGULAR];
+            cmd->kobra_omega = velocities[ANGULAR];
             break;
         case RIGHT_ARROW:
             ROS_WARN("MOVE RIGHT");
-            cmd->kobra_omega = velocities[ANGULAR];
+            cmd->kobra_omega = -velocities[ANGULAR];
             break;
         case UP_ARROW:
             ROS_WARN("MOVE FORWARD");
-            cmd->kobra_linear = -velocities[LINEAR];
+            cmd->kobra_linear = velocities[LINEAR];
             break;
         case DOWN_ARROW:
             ROS_WARN("MOVE BACKWARD");
-            cmd->kobra_linear = velocities[LINEAR];
+            cmd->kobra_linear = -velocities[LINEAR];
             break;
         case TILT_UP:
             ROS_WARN("TILT UP");
