@@ -53,11 +53,11 @@ void PantTiltCameraPlugin::pantiltCallback(const kobra_msgs::ptz_msg::ConstPtr &
     double pan_time = abs(pan_degree / velocity[PAN] * radius[PAN]);    // convertion from v to omega
     double tilt_time = abs(tilt_degree / velocity[TILT] * radius[TILT]);
 
-    if(tilt_time > 0){
+    if(tilt_time > 0.0){
         moveJoint(TILT, tilt_degree, tilt_time);
     }
 
-    if(pan_time > 0){
+    if(pan_time > 0.0){
         moveJoint(PAN, pan_degree, pan_time);
     }
 }
@@ -66,7 +66,7 @@ void PantTiltCameraPlugin::moveJoint(std::string JOINT, double degree, double sl
 {
     joint_velocity[JOINT] = velocity[JOINT] * sign(degree);
     ros::Duration(sleep_time).sleep();
-    joint_velocity[JOINT] = 0;
+    joint_velocity[JOINT] = 0.0;
 }
 
 double PantTiltCameraPlugin::fixAngle(std::string JOINT, double degree)
@@ -75,7 +75,7 @@ double PantTiltCameraPlugin::fixAngle(std::string JOINT, double degree)
     math::Angle upLimit = math::Angle::HalfPi - math::Angle(ANGLE_GAP);
     math::Angle downLimit = math::Angle::Zero - math::Angle::HalfPi + math::Angle(ANGLE_GAP);
 
-    if(degree > 0) {
+    if(degree > 0.0) {
         return std::min((upLimit - current_angle).Radian(), degree);
     } else {
         return std::max((downLimit - current_angle).Radian(), degree);
