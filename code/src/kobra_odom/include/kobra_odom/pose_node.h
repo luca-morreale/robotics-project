@@ -5,6 +5,7 @@
 #include <tf/transform_broadcaster.h>
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <nav_msgs/Odometry.h>
 #include <math.h>
 
@@ -23,6 +24,7 @@ public:
 
 private: 
     ros::NodeHandle *rosnode;
+    ros::Subscriber poseSub;
     ros::Subscriber odomSub;
     ros::Publisher posePub;
     tf::TransformBroadcaster odom_broadcaster;
@@ -31,11 +33,13 @@ private:
     double y;
     double yaw;
     double last_msg_time;
+    double last_restore_pose;
 
     typedef void(PoseNode::*IntegrationFunction)(double linear, double angular, double time_step);
 
     IntegrationFunction integration;
 
+    void poseCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& msg);
     void odomCallback(const nav_msgs::Odometry::ConstPtr& msg);
     void eulerIntegration(double linear, double angular, double time_step);
     void rungeKuttaIntegration(double linear, double angular, double time_step);
