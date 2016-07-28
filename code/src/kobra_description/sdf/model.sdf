@@ -472,7 +472,7 @@
 
             
             <plugin name="laser_controller" filename="libgazebo_ros_laser.so">
-                <topicName>/kobra/laser_scan</topicName>
+                <topicName>/scan</topicName>
                 <frameName>laser_sensor</frameName>
                 <updateRate>0.0</updateRate>
             </plugin>
@@ -552,7 +552,7 @@
         <RightRearJoint>right_rear_wheel_joint</RightRearJoint>
         <WheelSeparation>0.49</WheelSeparation>
         <RobotBaseFrame>base_link</RobotBaseFrame>
-        <CmdTopic>kobra/cmd_vel</CmdTopic>
+        <CmdTopic>cmd_vel</CmdTopic>
         <OdometryTopic>kobra/odom</OdometryTopic>
     </plugin>
 
