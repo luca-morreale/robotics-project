@@ -33,7 +33,7 @@ private:
     double y;
     double yaw;
     double last_msg_time;
-    double last_restore_pose;
+    bool init_pose;
 
     typedef void(PoseNode::*IntegrationFunction)(double linear, double angular, double time_step);
 

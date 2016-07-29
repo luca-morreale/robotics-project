@@ -8,7 +8,7 @@ bool PoseNode::Prepare()
     rosnode = new ros::NodeHandle();
     initPoseValues();
 
-    poseSub = rosnode->subscribe("/amcl_pose", 10, &PoseNode::poseCallback, this);
+    poseSub = rosnode->subscribe("/initialpose", 10, &PoseNode::poseCallback, this);
     odomSub = rosnode->subscribe("/kobra/odom", 10, &PoseNode::odomCallback, this);
     posePub = rosnode->advertise<nav_msgs::Odometry>("/odom", 10);
     ROS_INFO("Node %s ready to run.", ros::this_node::getName().c_str());
@@ -30,6 +30,8 @@ void PoseNode::Shutdown()
 
 void PoseNode::initPoseValues()
 {
+    init_pose = false;
+
     std::string type;
     rosnode->param<std::string>("integration_type", type, EULER);
 
@@ -42,13 +44,11 @@ void PoseNode::initPoseValues()
     }
 
     last_msg_time = -1.0;
-    last_restore_pose = -1.0;
 }
 
 void PoseNode::poseCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& msg)
 {
-    double dt = msg->header.stamp.toSec() -last_restore_pose;
-    if(last_restore_pose < 0 || dt < RUN_PERIOD_DEFAULT) {
+    if(!init_pose) {
         x = msg->pose.pose.position.x;
         y = msg->pose.pose.position.y;
         geometry_msgs::Quaternion orientation = msg->pose.pose.orientation;
@@ -56,7 +56,7 @@ void PoseNode::poseCallback(const geometry_msgs::PoseWithCovarianceStamped::Cons
         double roll, pitch;
         mat.getRPY(roll, pitch, this->yaw);
 
-        last_restore_pose = msg->header.stamp.toSec();
+        init_pose = true;
     }
 }
 
@@ -64,7 +64,7 @@ void PoseNode::odomCallback(const nav_msgs::Odometry::ConstPtr& msg)
 {
     nav_msgs::Odometry in = *msg;
 	// Init -- extract cmd_velocities from the msg
-    if(last_msg_time < 0 || last_restore_pose < 0) {
+    if(last_msg_time < 0 || !init_pose) {
         last_msg_time = msg->header.stamp.toSec();
         return;
     }
