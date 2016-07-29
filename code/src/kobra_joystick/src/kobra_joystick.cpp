@@ -12,7 +12,7 @@ KeyboardReader::KeyboardReader()
 
         initScaleFactors();
 
-        velocity_pub = rosnode->advertise<geometry_msgs::Twist>("kobra/cmd_vel", 1);
+        velocity_pub = rosnode->advertise<geometry_msgs::Twist>("/cmd_vel", 1);
         pantilt_pub = rosnode->advertise<kobra_msgs::ptz_msg>("kobra/ptz", 1);
 }
 
