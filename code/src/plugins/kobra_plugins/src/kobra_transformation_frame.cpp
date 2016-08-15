@@ -16,7 +16,7 @@ void TFKobraPlugin::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     this->model = _model;
     this->update_connection = event::Events::ConnectWorldUpdateBegin(boost::bind(&TFKobraPlugin::update, this));
     
-    update_period = 1.0 / 50.0;
+    update_period = 1.0 / 100.0;
 
     if(!existsTags(_sdf)) { return; }
     extractJoints(_sdf);

@@ -73,7 +73,7 @@ void PoseNode::odomCallback(const nav_msgs::Odometry::ConstPtr& msg)
     double angular = msg->twist.twist.angular.z;
     double time_step = msg->header.stamp.toSec() - last_msg_time;
 
-    if(time_step < RUN_PERIOD_DEFAULT) {
+    if(time_step <= RUN_PERIOD_DEFAULT) {
         return;
     }
 

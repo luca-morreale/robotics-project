@@ -9,7 +9,7 @@
 #include <nav_msgs/Odometry.h>
 #include <math.h>
 
-#define RUN_PERIOD_DEFAULT 0.05
+#define RUN_PERIOD_DEFAULT 0.2
 #define NAME_OF_THIS_NODE "pose_node"
 #define EULER "euler"
 #define KUTTA "kutta"
