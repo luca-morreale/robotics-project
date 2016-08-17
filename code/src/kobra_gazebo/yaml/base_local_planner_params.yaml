@@ -1,6 +1,6 @@
 TrajectoryPlannerROS:
-  max_vel_x: 0.45
-  min_vel_x: 0.1
+  max_vel_x: 1
+  min_vel_x: 0.0
   max_vel_theta: 1.0
   min_in_place_vel_theta: 0.4
 
@@ -8,4 +8,9 @@ TrajectoryPlannerROS:
   acc_lim_x: 2.5
   acc_lim_y: 2.5
 
-  holonomic_robot: true
+  escape_vel: -0.5
+
+#Determines whether velocity commands are generated for a holonomic or non-holonomic robot. For holonomic robots, strafing velocity commands may be issued to the base. For non-holonomic robots, no strafing velocity commands will be issued.
+  holonomic_robot: false
+
+  meter_scoring: true
