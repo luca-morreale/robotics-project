@@ -33,6 +33,7 @@ namespace gazebo {
 
     #define FZERO 0.0
     #define DEFAULT_SCALE 1.0
+    #define DOT_FIVE 0.5
 
 
     typedef struct Command {

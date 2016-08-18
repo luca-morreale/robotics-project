@@ -23,10 +23,10 @@ void KeyboardReader::initScaleFactors()
     rosnode->param("pan_scale", p_scale, DEFAULT_SCALE);
     rosnode->param("tilt_scale", t_scale, DEFAULT_SCALE);
 
-    rosnode->param("linear_vel", velocities[LINEAR], DEFAULT_SCALE);
-    rosnode->param("angular_vel", velocities[ANGULAR], DEFAULT_SCALE);
-    rosnode->param("pan_degree", velocities[PAN], 0.5);
-    rosnode->param("tilt_degree", velocities[TILT], 0.5);
+    rosnode->param("linear_vel", velocities[LINEAR], DOT_FIVE);
+    rosnode->param("angular_vel", velocities[ANGULAR], DOT_FIVE);
+    rosnode->param("pan_degree", velocities[PAN], DOT_FIVE);
+    rosnode->param("tilt_degree", velocities[TILT], DOT_FIVE);
 }
 
 void KeyboardReader::keyLoop()
