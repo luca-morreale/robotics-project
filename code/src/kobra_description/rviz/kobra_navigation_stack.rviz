@@ -80,7 +80,7 @@ Visualization Manager:
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 0
+      Max Intensity: 3.80237e-37
       Min Color: 0; 0; 0
       Min Intensity: 0
       Name: LaserScan
@@ -88,45 +88,26 @@ Visualization Manager:
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.01
+      Size (m): 0.03
       Style: Flat Squares
       Topic: /scan
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
     - Class: rviz/TF
-      Enabled: true
+      Enabled: false
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        base_link:
-          Value: true
-        camera_sensor:
-          Value: true
-        laser_sensor:
-          Value: true
-        map:
-          Value: true
-        pan_frame:
-          Value: true
-        tilt_frame:
-          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        map:
-          base_link:
-            laser_sensor:
-              {}
-            tilt_frame:
-              pan_frame:
-                camera_sensor:
-                  {}
+        {}
       Update Interval: 0
-      Value: true
+      Value: false
     - Arrow Length: 0.3
       Class: rviz/PoseArray
       Color: 255; 25; 0
@@ -229,11 +210,11 @@ Visualization Manager:
         Value: false
       Name: Current View
       Near Clip Distance: 0.01
-      Scale: 37.2593
+      Scale: 33.4279
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
-      X: 1.31228
-      Y: -0.998811
+      X: 1.08705
+      Y: -5.18317
     Saved: ~
 Window Geometry:
   Displays:
@@ -251,5 +232,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1200
-  X: 30
+  X: 0
   Y: 14
