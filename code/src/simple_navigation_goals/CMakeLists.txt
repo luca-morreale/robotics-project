@@ -9,5 +9,8 @@ find_package(catkin REQUIRED COMPONENTS
   move_base_msgs
   roscpp
 )
+
+catkin_package()
+
 add_executable(simple_navigation_goals src/simple_navigation_goals.cpp)
 target_link_libraries(simple_navigation_goals ${catkin_LIBRARIES})
