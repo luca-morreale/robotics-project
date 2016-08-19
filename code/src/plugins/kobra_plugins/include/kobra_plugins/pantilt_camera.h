@@ -4,6 +4,7 @@
 
 #include <map>
 #include <algorithm>
+#include <math.h>
 
 #include <gazebo/common/common.hh>
 #include <gazebo/physics/physics.hh>

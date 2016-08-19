@@ -50,8 +50,8 @@ void PantTiltCameraPlugin::pantiltCallback(const kobra_msgs::ptz_msg::ConstPtr &
     double zoom = msg->zoom;
 
  
-    double pan_time = abs(pan_degree / velocity[PAN] * radius[PAN]);    // convertion from v to omega
-    double tilt_time = abs(tilt_degree / velocity[TILT] * radius[TILT]);
+    double pan_time = fabs(pan_degree / velocity[PAN] * radius[PAN]);    // convertion from v to omega
+    double tilt_time = fabs(tilt_degree / velocity[TILT] * radius[TILT]);
 
     if(tilt_time > 0.0){
         moveJoint(TILT, tilt_degree, tilt_time);
