@@ -5,12 +5,12 @@ find_package(catkin REQUIRED COMPONENTS
   gazebo_ros
   geometry_msgs
   roscpp
+  kobra_msgs
 )
 
 ################################################
 ## Declare ROS messages, services and actions ##
 ################################################
-
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##

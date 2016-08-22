@@ -11,6 +11,7 @@ find_package(kobra_msgs REQUIRED)
 
 include_directories(${roscpp_INCLUDE_DIRS})
 include_directories(${std_msgs_INCLUDE_DIRS})
+include_directories(${kobra_msgs_INCLUDE_DIRS})
 include_directories(${GAZEBO_INCLUDE_DIRS})
 
 link_directories(${GAZEBO_LIBRARY_DIRS})
